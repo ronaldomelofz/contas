@@ -201,80 +201,60 @@ function updateSummary() {
     console.log('=== RESUMO ATUALIZADO ===');
 }
 
-// Função para atualizar saldo bancário - VERSÃO CORRIGIDA
+// Função para atualizar saldo bancário - VERSÃO SIMPLIFICADA E FUNCIONAL
 function updateBalance() {
     console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
     
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-        const input = document.getElementById('balanceInput');
-        console.log('Campo balanceInput encontrado:', input);
+    const input = document.getElementById('balanceInput');
+    console.log('Campo balanceInput encontrado:', input);
+    
+    if (!input) {
+        console.error('Campo balanceInput não encontrado!');
+        alert('Erro: Campo de saldo não encontrado!');
+        return;
+    }
+    
+    const inputValue = input.value;
+    console.log('Valor digitado no input:', inputValue);
+    
+    if (!inputValue || inputValue.trim() === '') {
+        alert('Por favor, digite um valor para o saldo bancário!');
+        return;
+    }
+    
+    // Converter vírgula para ponto e processar
+    const balance = parseFloat(inputValue.replace(',', '.')) || 0;
+    console.log('Valor processado:', balance);
+    
+    if (isNaN(balance)) {
+        alert('Por favor, digite um valor numérico válido!');
+        return;
+    }
+    
+    bankBalance = balance;
+    console.log('Saldo bancário definido como:', bankBalance);
+    
+    // Atualizar resumo completo (isso já atualiza todos os campos)
+    updateSummary();
+    
+    // Salvar no localStorage
+    localStorage.setItem('bankBalance', balance.toString());
+    console.log('Saldo bancário salvo no localStorage:', balance);
+    
+    // Mostrar feedback visual
+    const button = document.querySelector('button[onclick="updateBalance()"]');
+    if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
+        button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
         
-        if (!input) {
-            console.error('Campo balanceInput não encontrado!');
-            alert('Erro: Campo de saldo não encontrado!');
-            return;
-        }
-        
-        const inputValue = input.value;
-        console.log('Valor digitado no input:', inputValue);
-        
-        // Converter vírgula para ponto e processar
-        const balance = parseFloat(inputValue.replace(',', '.')) || 0;
-        console.log('Valor processado:', balance);
-        
-        if (isNaN(balance)) {
-            alert('Por favor, digite um valor numérico válido!');
-            return;
-        }
-        
-        bankBalance = balance;
-        console.log('Saldo bancário definido como:', bankBalance);
-        
-        // Atualizar o campo de exibição
-        const balanceDisplay = document.getElementById('balanceDisplay');
-        console.log('Campo balanceDisplay encontrado:', balanceDisplay);
-        
-        if (balanceDisplay) {
-            balanceDisplay.textContent = formatCurrency(bankBalance);
-            console.log('Display do saldo atualizado para:', formatCurrency(bankBalance));
-        } else {
-            console.error('Campo balanceDisplay não encontrado!');
-        }
-        
-        // Atualizar o card de resumo
-        const bankBalanceCard = document.getElementById('bankBalanceDisplay');
-        console.log('Card bankBalanceDisplay encontrado:', bankBalanceCard);
-        
-        if (bankBalanceCard) {
-            bankBalanceCard.textContent = formatCurrency(bankBalance);
-            console.log('Card do saldo atualizado para:', formatCurrency(bankBalance));
-        } else {
-            console.error('Card bankBalanceDisplay não encontrado!');
-        }
-        
-        // Atualizar resumo completo
-        updateSummary();
-        
-        // Salvar no localStorage
-        localStorage.setItem('bankBalance', balance.toString());
-        console.log('Saldo bancário salvo no localStorage:', balance);
-        
-        // Mostrar feedback visual
-        const button = document.querySelector('button[onclick="updateBalance()"]');
-        if (button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
-            button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-            }, 2000);
-        }
-        
-        console.log('=== SALDO BANCÁRIO ATUALIZADO COM SUCESSO ===');
-    }, 100);
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = '';
+        }, 2000);
+    }
+    
+    console.log('=== SALDO BANCÁRIO ATUALIZADO COM SUCESSO ===');
 }
 
 // Função para aplicar filtro de datas
