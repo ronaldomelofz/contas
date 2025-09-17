@@ -1,20 +1,13 @@
 {
-  \
-name\: \contas-system\,
-  \version\: \1.0.0\,
-  \description\: \Sistema
-de
-Contas\,
-  \main\: \app.py\,
-  \scripts\: {
-    \build\: \pip
-install
--r
-requirements.txt\,
-    \start\: \python
-app.py\
+  "name": "contas-static",
+  "version": "1.0.0",
+  "description": "Sistema de Contas - Site Estático",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Site estático - sem build necessário'",
+    "start": "echo 'Site estático - acesse index.html'"
   },
-  \engines\: {
-    \python\: \3.9\
-  }
+  "keywords": ["contas", "static", "html"],
+  "author": "Ronaldo",
+  "license": "MIT"
 }

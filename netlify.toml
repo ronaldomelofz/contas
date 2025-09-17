@@ -1,5 +1,9 @@
 [build]
   publish = "."
+  command = "echo 'Site estático - sem build necessário'"
+
+[build.environment]
+  NODE_VERSION = "18"
 
 [[redirects]]
   from = "/*"
