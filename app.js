@@ -201,50 +201,80 @@ function updateSummary() {
     console.log('=== RESUMO ATUALIZADO ===');
 }
 
-// Função para atualizar saldo bancário
+// Função para atualizar saldo bancário - VERSÃO CORRIGIDA
 function updateBalance() {
     console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
     
-    const input = document.getElementById('balanceInput');
-    if (!input) {
-        console.error('Campo balanceInput não encontrado!');
-        alert('Erro: Campo de saldo não encontrado!');
-        return;
-    }
-    
-    const balance = parseFloat(input.value) || 0;
-    console.log('Novo saldo digitado:', input.value);
-    console.log('Novo saldo processado:', balance);
-    
-    bankBalance = balance;
-    
-    // Atualizar o campo de exibição
-    const balanceDisplay = document.getElementById('balanceDisplay');
-    if (balanceDisplay) {
-        balanceDisplay.textContent = formatCurrency(bankBalance);
-        console.log('Display do saldo atualizado para:', formatCurrency(bankBalance));
-    }
-    
-    updateSummary();
-    
-    // Salvar no localStorage
-    localStorage.setItem('bankBalance', balance.toString());
-    console.log('Saldo bancário salvo no localStorage:', balance);
-    
-    // Mostrar feedback visual
-    const button = document.querySelector('button[onclick="updateBalance()"]');
-    if (button) {
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
-        button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+    // Aguardar um pouco para garantir que o DOM está pronto
+    setTimeout(() => {
+        const input = document.getElementById('balanceInput');
+        console.log('Campo balanceInput encontrado:', input);
         
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.style.background = '';
-        }, 2000);
-    }
-    
-    console.log('=== SALDO BANCÁRIO ATUALIZADO ===');
+        if (!input) {
+            console.error('Campo balanceInput não encontrado!');
+            alert('Erro: Campo de saldo não encontrado!');
+            return;
+        }
+        
+        const inputValue = input.value;
+        console.log('Valor digitado no input:', inputValue);
+        
+        // Converter vírgula para ponto e processar
+        const balance = parseFloat(inputValue.replace(',', '.')) || 0;
+        console.log('Valor processado:', balance);
+        
+        if (isNaN(balance)) {
+            alert('Por favor, digite um valor numérico válido!');
+            return;
+        }
+        
+        bankBalance = balance;
+        console.log('Saldo bancário definido como:', bankBalance);
+        
+        // Atualizar o campo de exibição
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        console.log('Campo balanceDisplay encontrado:', balanceDisplay);
+        
+        if (balanceDisplay) {
+            balanceDisplay.textContent = formatCurrency(bankBalance);
+            console.log('Display do saldo atualizado para:', formatCurrency(bankBalance));
+        } else {
+            console.error('Campo balanceDisplay não encontrado!');
+        }
+        
+        // Atualizar o card de resumo
+        const bankBalanceCard = document.getElementById('bankBalanceDisplay');
+        console.log('Card bankBalanceDisplay encontrado:', bankBalanceCard);
+        
+        if (bankBalanceCard) {
+            bankBalanceCard.textContent = formatCurrency(bankBalance);
+            console.log('Card do saldo atualizado para:', formatCurrency(bankBalance));
+        } else {
+            console.error('Card bankBalanceDisplay não encontrado!');
+        }
+        
+        // Atualizar resumo completo
+        updateSummary();
+        
+        // Salvar no localStorage
+        localStorage.setItem('bankBalance', balance.toString());
+        console.log('Saldo bancário salvo no localStorage:', balance);
+        
+        // Mostrar feedback visual
+        const button = document.querySelector('button[onclick="updateBalance()"]');
+        if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
+            button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+            }, 2000);
+        }
+        
+        console.log('=== SALDO BANCÁRIO ATUALIZADO COM SUCESSO ===');
+    }, 100);
 }
 
 // Função para aplicar filtro de datas
@@ -488,6 +518,31 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Chamando updateSummary()...');
     updateSummary();
     
+    // Adicionar event listeners
+    const balanceInput = document.getElementById('balanceInput');
+    if (balanceInput) {
+        balanceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                console.log('Enter pressionado no campo de saldo');
+                updateBalance();
+            }
+        });
+        
+        balanceInput.addEventListener('input', function(e) {
+            console.log('Valor digitado no campo de saldo:', e.target.value);
+        });
+    }
+    
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    
+    if (startDate) {
+        startDate.addEventListener('change', applyFilter);
+    }
+    if (endDate) {
+        endDate.addEventListener('change', applyFilter);
+    }
+    
     console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
 });
 
@@ -500,26 +555,18 @@ setTimeout(function() {
     }
 }, 1000);
 
-// Adicionar event listeners para melhor UX
-document.addEventListener('DOMContentLoaded', function() {
-    // Enter no campo de saldo bancário
-    const balanceInput = document.getElementById('balanceInput');
-    if (balanceInput) {
-        balanceInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                updateBalance();
-            }
-        });
-    }
-    
-    // Enter nos campos de data
-    const startDate = document.getElementById('startDate');
-    const endDate = document.getElementById('endDate');
-    
-    if (startDate) {
-        startDate.addEventListener('change', applyFilter);
-    }
-    if (endDate) {
-        endDate.addEventListener('change', applyFilter);
-    }
-});
+// Debug: Verificar se as funções estão disponíveis globalmente
+window.updateBalance = updateBalance;
+window.applyFilter = applyFilter;
+window.clearFilter = clearFilter;
+window.importBills = importBills;
+window.confirmImport = confirmImport;
+window.downloadTemplate = downloadTemplate;
+window.closeModal = closeModal;
+window.editBill = editBill;
+window.deleteBill = deleteBill;
+
+console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
+console.log('updateBalance disponível:', typeof window.updateBalance);
+console.log('applyFilter disponível:', typeof window.applyFilter);
+console.log('clearFilter disponível:', typeof window.clearFilter);
