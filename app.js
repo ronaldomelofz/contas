@@ -92,6 +92,9 @@ function renderBills() {
         } else if (isToday) {
             statusClass += ' bill-today';
             statusText = 'Hoje';
+        } else {
+            statusClass += ' bill-to-pay';
+            statusText = 'A pagar';
         }
         
         row.innerHTML = 
@@ -170,7 +173,7 @@ function updateSummary() {
     
     // Atualizar cor do saldo bancário
     if (bankBalanceEl) {
-        bankBalanceEl.className = 'value';
+        bankBalanceEl.className = 'card-value';
         if (bankBalance > 0) {
             bankBalanceEl.style.color = '#dc2626';
         } else if (bankBalance < 0) {
@@ -185,20 +188,54 @@ function updateSummary() {
 
 // Função para atualizar saldo bancário
 function updateBalance() {
+    console.log('Atualizando saldo bancário...');
+    
     const input = document.getElementById('balanceInput');
+    if (!input) {
+        console.error('Campo balanceInput não encontrado!');
+        return;
+    }
+    
     const balance = parseFloat(input.value) || 0;
+    console.log('Novo saldo:', balance);
     
     bankBalance = balance;
+    
+    // Atualizar o campo de exibição
+    const balanceDisplay = document.querySelector('.balance-display');
+    if (balanceDisplay) {
+        balanceDisplay.textContent = formatCurrency(bankBalance);
+    }
+    
     updateSummary();
     
     // Salvar no localStorage
     localStorage.setItem('bankBalance', balance.toString());
+    console.log('Saldo bancário salvo no localStorage:', balance);
+    
+    // Mostrar feedback visual
+    const button = document.querySelector('button[onclick="updateBalance()"]');
+    if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
+        button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = '';
+        }, 2000);
+    }
 }
 
 // Função para aplicar filtro de datas
 function applyFilter() {
+    console.log('Aplicando filtro de datas...');
+    
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
+    
+    console.log('Data inicial:', startDate);
+    console.log('Data final:', endDate);
     
     if (startDate && endDate) {
         const start = new Date(startDate);
@@ -208,8 +245,11 @@ function applyFilter() {
             const billDate = new Date(bill.date.split('/').reverse().join('-'));
             return billDate >= start && billDate <= end;
         });
+        
+        console.log('Contas filtradas:', filteredBills.length);
     } else {
         filteredBills = [...bills];
+        console.log('Filtro limpo, mostrando todas as contas');
     }
     
     renderBills();
@@ -218,15 +258,22 @@ function applyFilter() {
 
 // Função para limpar filtro
 function clearFilter() {
+    console.log('Limpando filtro...');
+    
     document.getElementById('startDate').value = '2025-09-17';
     document.getElementById('endDate').value = '2025-09-30';
     filteredBills = [...bills];
+    
     renderBills();
     updateSummary();
+    
+    console.log('Filtro limpo com sucesso');
 }
 
 // Função para importar contas
 function importBills() {
+    console.log('Iniciando importação de contas...');
+    
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
     
@@ -235,17 +282,25 @@ function importBills() {
         document.getElementById('modalTitle').textContent = 'Importar Contas';
         document.getElementById('modalMessage').textContent = Deseja importar as contas do arquivo ""?;
         document.getElementById('modal').style.display = 'block';
+        console.log('Arquivo selecionado:', file.name);
+    } else {
+        alert('Por favor, selecione um arquivo primeiro!');
     }
 }
 
 // Função para confirmar importação
 function confirmImport() {
+    console.log('Confirmando importação...');
+    
     if (selectedFile) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const content = e.target.result;
             const lines = content.split('\n');
             const newBills = [];
+            
+            console.log('Processando arquivo...');
+            console.log('Linhas encontradas:', lines.length);
             
             lines.forEach((line, index) => {
                 if (line.trim() && index > 0) { // Pular cabeçalho
@@ -271,6 +326,8 @@ function confirmImport() {
                                 date: dateStr,
                                 value: value
                             });
+                            
+                            console.log('Conta processada:', company, value);
                         } catch (error) {
                             console.log('Erro ao processar linha:', line, error);
                         }
@@ -284,8 +341,10 @@ function confirmImport() {
                 renderBills();
                 updateSummary();
                 alert(Importadas  contas com sucesso!);
+                console.log('Importação concluída:', newBills.length, 'contas');
             } else {
                 alert('Nenhuma conta válida encontrada no arquivo');
+                console.log('Nenhuma conta válida encontrada');
             }
         };
         reader.readAsText(selectedFile);
@@ -295,6 +354,8 @@ function confirmImport() {
 
 // Função para baixar template
 function downloadTemplate() {
+    console.log('Baixando template...');
+    
     const template = EMPRESA - NF NUMERO\tPARCELA\tDATA\tVALOR
 ARTECOLA - NF 651630\t1/3\t16/09/2025\tR$ 1.498,72
 EXEMPLO - NF 123456\t2/3\t17/09/2025\tR$ 2.500,00
@@ -309,10 +370,14 @@ TESTE - NF 789012\t3/3\t18/09/2025\tR$ 1.200,50;
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+    
+    console.log('Template baixado com sucesso');
 }
 
 // Função para fechar modal
 function closeModal() {
+    console.log('Fechando modal...');
+    
     document.getElementById('modal').style.display = 'none';
     selectedFile = null;
     document.getElementById('fileInput').value = '';
@@ -320,13 +385,24 @@ function closeModal() {
 
 // Funções para editar e excluir
 function editBill(id) {
+    console.log('Editando conta ID:', id);
+    
     const bill = bills.find(b => b.id === id);
     if (bill) {
         const newCompany = prompt('Empresa:', bill.company);
+        if (newCompany === null) return; // Usuário cancelou
+        
         const newNumber = prompt('Número:', bill.number);
+        if (newNumber === null) return;
+        
         const newParcels = prompt('Parcelas:', bill.parcels);
+        if (newParcels === null) return;
+        
         const newDate = prompt('Data (DD/MM/AAAA):', bill.date);
+        if (newDate === null) return;
+        
         const newValue = prompt('Valor:', bill.value);
+        if (newValue === null) return;
         
         if (newCompany && newDate && newValue) {
             bill.company = newCompany;
@@ -337,16 +413,29 @@ function editBill(id) {
             
             renderBills();
             updateSummary();
+            
+            console.log('Conta editada com sucesso:', bill);
+            alert('Conta editada com sucesso!');
         }
     }
 }
 
 function deleteBill(id) {
+    console.log('Excluindo conta ID:', id);
+    
     if (confirm('Tem certeza que deseja excluir esta conta?')) {
+        const originalLength = bills.length;
         bills = bills.filter(bill => bill.id !== id);
         filteredBills = [...bills];
-        renderBills();
-        updateSummary();
+        
+        if (bills.length < originalLength) {
+            renderBills();
+            updateSummary();
+            console.log('Conta excluída com sucesso');
+            alert('Conta excluída com sucesso!');
+        } else {
+            console.log('Conta não encontrada para exclusão');
+        }
     }
 }
 
@@ -357,13 +446,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Carregar saldo bancário do localStorage
     const savedBalance = localStorage.getItem('bankBalance');
-    if (savedBalance) {
+    if (savedBalance !== null) {
         bankBalance = parseFloat(savedBalance);
         const balanceInput = document.getElementById('balanceInput');
         if (balanceInput) {
             balanceInput.value = bankBalance;
         }
-        console.log('Saldo bancário carregado:', bankBalance);
+        console.log('Saldo bancário carregado do localStorage:', bankBalance);
     }
     
     // Garantir que as contas filtradas estejam corretas
@@ -388,3 +477,27 @@ setTimeout(function() {
         updateSummary();
     }
 }, 1000);
+
+// Adicionar event listeners para melhor UX
+document.addEventListener('DOMContentLoaded', function() {
+    // Enter no campo de saldo bancário
+    const balanceInput = document.getElementById('balanceInput');
+    if (balanceInput) {
+        balanceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateBalance();
+            }
+        });
+    }
+    
+    // Enter nos campos de data
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    
+    if (startDate) {
+        startDate.addEventListener('change', applyFilter);
+    }
+    if (endDate) {
+        endDate.addEventListener('change', applyFilter);
+    }
+});
