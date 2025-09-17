@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contas para Pagamento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-receipt"></i> Contas para Pagamento</h1>
+            <div class="summary">
+                <div class="summary-item">
+                    <span class="label">Total:</span>
+                    <span class="value total" id="totalValue">R$ 0,00</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Por dia útil:</span>
+                    <span class="value daily" id="dailyValue">R$ 0,00</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Dias úteis:</span>
+                    <span class="value days" id="daysValue">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="controls">
+                <button class="btn btn-primary" id="addBillBtn">
+                    <i class="fas fa-plus"></i> Adicionar Conta
+                </button>
+                <button class="btn btn-secondary" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Limpar Tudo
+                </button>
+            </div>
+
+            <!-- Filtro por intervalo de datas -->
+            <div class="filter-section">
+                <h3><i class="fas fa-filter"></i> Filtro por Data</h3>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="startDate">Data Inicial:</label>
+                        <input type="date" id="startDate" class="filter-input">
+                    </div>
+                    <div class="filter-group">
+                        <label for="endDate">Data Final:</label>
+                        <input type="date" id="endDate" class="filter-input">
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-filter" id="applyFilter">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                        <button class="btn btn-clear" id="clearFilter">
+                            <i class="fas fa-times"></i> Limpar Filtro
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-info" id="filterInfo" style="display: none;">
+                    <span id="filterText"></span>
+                </div>
+            </div>
+
+            <div class="bills-container" id="billsContainer">
+                <!-- As contas serão inseridas aqui dinamicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para adicionar/editar conta -->
+    <div class="modal" id="billModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Adicionar Conta</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="billForm">
+                <div class="form-group">
+                    <label for="billName">Nome da Conta:</label>
+                    <input type="text" id="billName" required>
+                </div>
+                <div class="form-group">
+                    <label for="billNumber">Número/Referência:</label>
+                    <input type="text" id="billNumber">
+                </div>
+                <div class="form-group">
+                    <label for="billParcels">Parcelas:</label>
+                    <input type="text" id="billParcels" placeholder="Ex: 1/3">
+                </div>
+                <div class="form-group">
+                    <label for="billDate">Data de Vencimento:</label>
+                    <input type="date" id="billDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="billValue">Valor:</label>
+                    <input type="number" id="billValue" step="0.01" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

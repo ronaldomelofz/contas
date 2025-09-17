@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTAS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            color: #1f2937; 
+            line-height: 1.3;
+        }
+        
+        .container { 
+            max-width: 1600px; 
+            margin: 0 auto; 
+            padding: 12px; 
+        }
+        
+        /* HEADER ULTRA COMPACTO */
+        .header { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 16px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .header h1 { 
+            font-size: 1.5rem; 
+            color: #1f2937; 
+            margin-bottom: 16px; 
+            font-weight: 800; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .header h1 i { 
+            color: #3b82f6; 
+            font-size: 1.3rem;
+        }
+        
+        /* CARDS DE RESUMO ULTRA COMPACTOS */
+        .summary { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 8px; 
+            margin-bottom: 16px;
+        }
+        
+        .summary-item { 
+            background: white; 
+            border-radius: 6px; 
+            padding: 12px 8px; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid #3b82f6;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .summary-item:hover { 
+            transform: translateY(-1px); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+        }
+        
+        .summary-item .label { 
+            font-size: 0.7rem; 
+            color: #6b7280; 
+            margin-bottom: 6px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+        }
+        
+        .summary-item .value { 
+            font-size: 1.1rem; 
+            font-weight: 900; 
+            line-height: 1.1;
+        }
+        
+        .summary-item:nth-child(1) { border-left-color: #ef4444; }
+        .summary-item:nth-child(1) .value { color: #ef4444; }
+        
+        .summary-item:nth-child(2) { border-left-color: #10b981; }
+        .summary-item:nth-child(2) .value { color: #10b981; }
+        
+        .summary-item:nth-child(3) { border-left-color: #8b5cf6; }
+        .summary-item:nth-child(3) .value { color: #8b5cf6; font-size: 1.3rem; }
+        
+        .summary-item:nth-child(4) { border-left-color: #f59e0b; }
+        .summary-item:nth-child(4) .value { color: #f59e0b; }
+        
+        .summary-item:nth-child(5) { border-left-color: #06b6d4; }
+        .summary-item:nth-child(5) .value { color: #06b6d4; }
+        
+        /* CONTROLES ULTRA COMPACTOS */
+        .controls { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 16px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-section {
+            flex: 1;
+            min-width: 280px;
+        }
+        
+        .filter-section h3 { 
+            color: #1f2937; 
+            margin-bottom: 8px; 
+            font-size: 0.95rem; 
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .filter-controls { 
+            display: flex; 
+            gap: 8px; 
+            align-items: end; 
+            flex-wrap: wrap; 
+        }
+        
+        .filter-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 3px; 
+        }
+        
+        .filter-group label { 
+            font-weight: 700; 
+            color: #374151; 
+            font-size: 0.7rem; 
+        }
+        
+        .filter-group input[type="date"] { 
+            padding: 8px 10px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            min-width: 130px; 
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .filter-group input[type="date"]:focus { 
+            outline: none; 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1); 
+        }
+        
+        .filter-buttons { 
+            display: flex; 
+            gap: 4px; 
+        }
+        
+        .btn { 
+            padding: 8px 12px; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s ease-in-out; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 3px; 
+            text-decoration: none;
+        }
+        
+        .btn-primary { 
+            background: #3b82f6; 
+            color: white; 
+        }
+        
+        .btn-primary:hover { 
+            background: #2563eb; 
+        }
+        
+        .btn-secondary { 
+            background: #6b7280; 
+            color: white; 
+        }
+        
+        .btn-secondary:hover { 
+            background: #4b5563; 
+        }
+        
+        .btn-success { 
+            background: #10b981; 
+            color: white; 
+        }
+        
+        .btn-success:hover { 
+            background: #059669; 
+        }
+        
+        .btn-info { 
+            background: #06b6d4; 
+            color: white; 
+        }
+        
+        .btn-info:hover { 
+            background: #0891b2; 
+        }
+        
+        .filter-info { 
+            font-size: 0.75rem; 
+            color: #6b7280; 
+            background: #f3f4f6;
+            padding: 6px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        
+        /* SALDO BANCÁRIO ULTRA COMPACTO */
+        .bank-balance { 
+            flex: 0 0 auto;
+            min-width: 220px;
+        }
+        
+        .bank-balance h3 { 
+            color: #1f2937; 
+            margin-bottom: 6px; 
+            font-size: 0.95rem; 
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .balance-controls { 
+            display: flex; 
+            gap: 6px; 
+            align-items: center; 
+            flex-wrap: wrap; 
+        }
+        
+        .balance-input { 
+            padding: 8px 10px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            min-width: 100px; 
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .balance-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .balance-display { 
+            font-size: 1rem; 
+            font-weight: 900; 
+            padding: 8px 10px; 
+            border-radius: 5px; 
+            min-width: 90px; 
+            text-align: center; 
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .balance-positive { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .balance-negative { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+        .balance-zero { background: #f9fafb; color: #6b7280; border: 1px solid #e5e7eb; }
+        
+        /* IMPORT SECTION */
+        .import-section {
+            flex: 0 0 auto;
+            min-width: 200px;
+        }
+        
+        .import-section h3 { 
+            color: #1f2937; 
+            margin-bottom: 6px; 
+            font-size: 0.95rem; 
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .import-controls { 
+            display: flex; 
+            gap: 6px; 
+            align-items: center; 
+            flex-wrap: wrap; 
+        }
+        
+        .file-input { 
+            display: none; 
+        }
+        
+        .file-label { 
+            padding: 8px 12px; 
+            background: #10b981; 
+            color: white; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s ease-in-out; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 3px; 
+        }
+        
+        .file-label:hover { 
+            background: #059669; 
+        }
+        
+        /* TABELA ULTRA COMPACTA */
+        .main { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 16px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            overflow: hidden;
+        }
+        
+        .bills-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background: white; 
+            font-size: 0.8rem;
+        }
+        
+        .bills-table thead { 
+            background: #f8fafc; 
+        }
+        
+        .bills-table th { 
+            padding: 10px 8px; 
+            text-align: left; 
+            font-weight: 800; 
+            font-size: 0.7rem; 
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .bills-table th:last-child { text-align: center; }
+        
+        .bills-table tbody tr { 
+            border-bottom: 1px solid #f3f4f6; 
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .bills-table tbody tr:hover { 
+            background: #f8fafc; 
+        }
+        
+        .bills-table td { 
+            padding: 8px 6px; 
+            vertical-align: middle;
+        }
+        
+        .bill-company { 
+            font-weight: 800; 
+            color: #1f2937; 
+            font-size: 0.8rem; 
+            margin-bottom: 2px;
+        }
+        
+        .bill-number { 
+            color: #6b7280; 
+            font-size: 0.7rem; 
+            font-weight: 600;
+        }
+        
+        .bill-parcels { 
+            text-align: center; 
+            color: #374151; 
+            font-weight: 700; 
+            background: #f3f4f6;
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            font-size: 0.7rem;
+        }
+        
+        .bill-date { 
+            text-align: center; 
+            color: #374151; 
+            font-weight: 700; 
+            font-size: 0.8rem;
+        }
+        
+        .bill-status { 
+            text-align: center; 
+            color: #dc2626; 
+            font-weight: 700; 
+            background: #fef2f2;
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            font-size: 0.7rem;
+        }
+        
+        .bill-value { 
+            text-align: right; 
+            font-size: 0.9rem; 
+            font-weight: 900; 
+            color: #dc2626; 
+            background: #fef2f2;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid #fecaca;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+        
+        .bill-actions { 
+            display: flex; 
+            gap: 3px; 
+            justify-content: center;
+        }
+        
+        .btn-edit { 
+            background: #f59e0b; 
+            color: white; 
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .btn-edit:hover { 
+            background: #d97706; 
+        }
+        
+        .btn-delete { 
+            background: #ef4444; 
+            color: white; 
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .btn-delete:hover { 
+            background: #dc2626; 
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        /* RESPONSIVIDADE ULTRA COMPACTA */
+        @media (max-width: 1400px) { 
+            .summary { grid-template-columns: repeat(5, 1fr); gap: 6px; } 
+            .summary-item .value { font-size: 1rem; }
+            .summary-item:nth-child(3) .value { font-size: 1.2rem; }
+        }
+        
+        @media (max-width: 1200px) { 
+            .summary { grid-template-columns: repeat(3, 1fr); gap: 6px; } 
+        }
+        
+        @media (max-width: 768px) { 
+            .container { padding: 8px; } 
+            .header h1 { font-size: 1.3rem; } 
+            .summary { grid-template-columns: 1fr; gap: 6px; } 
+            .controls-row { flex-direction: column; align-items: stretch; }
+            .filter-controls { flex-direction: column; align-items: stretch; }
+            .filter-group input[type="date"] { min-width: auto; }
+            .filter-buttons { justify-content: center; }
+            .filter-info { text-align: center; }
+            .balance-controls { flex-direction: column; align-items: stretch; } 
+            .balance-input { min-width: auto; }
+            .import-controls { flex-direction: column; align-items: stretch; }
+            
+            .bills-table { font-size: 0.75rem; }
+            .bills-table th, .bills-table td { padding: 6px 4px; }
+            .bill-value { font-size: 0.8rem; min-width: 80px; }
+            .bill-actions { flex-direction: column; gap: 2px; }
+        }
+        
+        @media (max-width: 640px) {
+            .bills-table { display: block; overflow-x: auto; white-space: nowrap; }
+            .bills-table thead, .bills-table tbody, .bills-table th, .bills-table td, .bills-table tr { display: block; }
+            .bills-table thead tr { position: absolute; top: -9999px; left: -9999px; }
+            .bills-table tr { border: 1px solid #e5e7eb; margin-bottom: 4px; padding: 6px; border-radius: 4px; }
+            .bills-table td { border: none; position: relative; padding-left: 50%; }
+            .bills-table td:before { content: attr(data-label) ": "; position: absolute; left: 4px; width: 45%; padding-right: 8px; white-space: nowrap; font-weight: 700; color: #374151; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-receipt"></i> CONTAS</h1>
+            <div class="summary">
+                <div class="summary-item">
+                    <span class="label">Total Contas</span>
+                    <span class="value">R$ {{ "{:,.2f}".format(total_bills_value).replace(",", "X").replace(".", ",").replace("X", ".") }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Saldo Bancário</span>
+                    <span class="value" style="color: {% if bank_balance > 0 %}#dc2626{% elif bank_balance < 0 %}#16a34a{% else %}#6b7280{% endif %};">
+                        R$ {{ "{:,.2f}".format(bank_balance).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                    </span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Total Geral</span>
+                    <span class="value">R$ {{ "{:,.2f}".format(total_with_balance).replace(",", "X").replace(".", ",").replace("X", ".") }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Por Dia Útil</span>
+                    <span class="value">R$ {{ "{:,.2f}".format(daily_amount).replace(",", "X").replace(".", ",").replace("X", ".") }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Dias Úteis</span>
+                    <span class="value">{{ working_days }}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTROLES ULTRA COMPACTOS -->
+        <div class="controls">
+            <div class="controls-row">
+                <!-- FILTRO DE DATAS -->
+                <div class="filter-section">
+                    <h3><i class="fas fa-filter"></i> Filtro por Período</h3>
+                    <form method="GET" action="/">
+                        <div class="filter-controls">
+                            <div class="filter-group">
+                                <label for="startDate">Data Inicial</label>
+                                <input type="date" id="startDate" name="startDate" value="{{ start_date_filter }}">
+                            </div>
+                            <div class="filter-group">
+                                <label for="endDate">Data Final</label>
+                                <input type="date" id="endDate" name="endDate" value="{{ end_date_filter }}">
+                            </div>
+                            <div class="filter-buttons">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Filtrar
+                                </button>
+                                <a href="/" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Limpar
+                                </a>
+                            </div>
+                            <div class="filter-info">
+                                <i class="fas fa-info-circle"></i> 
+                                {{ bills|length }} contas
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SALDO BANCÁRIO -->
+                <div class="bank-balance">
+                    <h3><i class="fas fa-university"></i> Saldo Bancário</h3>
+                    <div class="balance-controls">
+                        <input type="number" id="balanceInput" class="balance-input" placeholder="Saldo" step="0.01">
+                        <button class="btn btn-primary" onclick="updateBalance()">
+                            <i class="fas fa-save"></i> Atualizar
+                        </button>
+                        <div id="balanceDisplay" class="balance-display balance-zero">
+                            R$ 0,00
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IMPORTAR CONTAS -->
+                <div class="import-section">
+                    <h3><i class="fas fa-upload"></i> Importar Contas</h3>
+                    <div class="import-controls">
+                        <input type="file" id="fileInput" class="file-input" accept=".txt" onchange="importBills()">
+                        <label for="fileInput" class="file-label">
+                            <i class="fas fa-upload"></i> Escolher Arquivo
+                        </label>
+                        <button class="btn btn-info" onclick="downloadTemplate()">
+                            <i class="fas fa-download"></i> Template
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABELA DE CONTAS -->
+        <main class="main">
+            <table class="bills-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Parcelas</th>
+                        <th>Vencimento</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in bills %}
+                    <tr>
+                        <td>
+                            <div class="bill-company">{{ bill.name }}</div>
+                            <div class="bill-number">{{ bill.number }}</div>
+                        </td>
+                        <td>
+                            <span class="bill-parcels">{{ bill.parcels or "-" }}</span>
+                        </td>
+                        <td class="bill-date">{{ bill.date.split("-")[2] }}/{{ bill.date.split("-")[1] }}/{{ bill.date.split("-")[0] }}</td>
+                        <td>
+                            <span class="bill-status">A pagar</span>
+                        </td>
+                        <td>
+                            <div class="bill-value">R$ {{ "{:,.2f}".format(bill.value).replace(",", "X").replace(".", ",").replace("X", ".") }}</div>
+                        </td>
+                        <td>
+                            <div class="bill-actions">
+                                <button class="btn btn-edit" onclick="editBill({{ loop.index }})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteBill({{ loop.index }})">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Importar Contas</h3>
+            <p id="modalMessage">Deseja importar as contas do arquivo selecionado?</p>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-success" onclick="confirmImport()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bankBalance = {{ bank_balance }};
+        let selectedFile = null;
+        
+        function updateBalance() {
+            const input = document.getElementById("balanceInput");
+            const display = document.getElementById("balanceDisplay");
+            const balance = parseFloat(input.value) || 0;
+            
+            bankBalance = balance;
+            
+            display.textContent = "R$ " + balance.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            display.className = "balance-display";
+            if (balance > 0) {
+                display.classList.add("balance-positive");
+            } else if (balance < 0) {
+                display.classList.add("balance-negative");
+            } else {
+                display.classList.add("balance-zero");
+            }
+            
+            fetch("/update_balance", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({balance: balance})
+            }).then(() => {
+                location.reload();
+            });
+        }
+        
+        function importBills() {
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+            
+            if (file) {
+                selectedFile = file;
+                document.getElementById("modalTitle").textContent = "Importar Contas";
+                document.getElementById("modalMessage").textContent = `Deseja importar as contas do arquivo "${file.name}"?`;
+                document.getElementById("modal").style.display = "block";
+            }
+        }
+        
+        function confirmImport() {
+            if (selectedFile) {
+                const formData = new FormData();
+                formData.append("file", selectedFile);
+                
+                fetch("/import_bills", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert("Erro: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert("Erro ao importar: " + error);
+                });
+            }
+            closeModal();
+        }
+        
+        function downloadTemplate() {
+            window.open("/download_template", "_blank");
+        }
+        
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+            selectedFile = null;
+            document.getElementById("fileInput").value = "";
+        }
+        
+        function editBill(id) {
+            alert("Funcionalidade de edição será implementada em breve!");
+        }
+        
+        function deleteBill(id) {
+            if (confirm("Tem certeza que deseja excluir esta conta?")) {
+                alert("Funcionalidade de exclusão será implementada em breve!");
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const display = document.getElementById("balanceDisplay");
+            display.textContent = "R$ " + bankBalance.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            if (bankBalance > 0) {
+                display.classList.add("balance-positive");
+            } else if (bankBalance < 0) {
+                display.classList.add("balance-negative");
+            } else {
+                display.classList.add("balance-zero");
+            }
+        });
+    </script>
+</body>
+</html>
