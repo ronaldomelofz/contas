@@ -61,15 +61,21 @@ function calculateWorkingDays(startDate, endDate) {
 
 // Função para renderizar contas na tabela
 function renderBills() {
+    console.log('Iniciando renderização das contas...');
+    console.log('Total de contas:', bills.length);
+    console.log('Contas filtradas:', filteredBills.length);
+    
     const tbody = document.getElementById('billsTableBody');
     if (!tbody) {
-        console.error('Elemento billsTableBody não encontrado');
+        console.error('Elemento billsTableBody não encontrado!');
         return;
     }
     
     tbody.innerHTML = '';
     
-    filteredBills.forEach(bill => {
+    filteredBills.forEach((bill, index) => {
+        console.log(Renderizando conta :, bill.company);
+        
         const row = document.createElement('tr');
         
         const today = new Date();
@@ -117,10 +123,14 @@ function renderBills() {
         
         tbody.appendChild(row);
     });
+    
+    console.log('Renderização concluída!');
 }
 
 // Função para atualizar resumo
 function updateSummary() {
+    console.log('Atualizando resumo...');
+    
     const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
     const totalWithBalance = totalBills + bankBalance;
     const workingDays = 12; // Dias úteis de 17/09 a 30/09
@@ -133,12 +143,30 @@ function updateSummary() {
     const workingDaysEl = document.getElementById('workingDays');
     const filteredCountEl = document.getElementById('filteredCount');
     
-    if (totalBillsEl) totalBillsEl.textContent = formatCurrency(totalBills);
-    if (bankBalanceEl) bankBalanceEl.textContent = formatCurrency(bankBalance);
-    if (totalGeneralEl) totalGeneralEl.textContent = formatCurrency(totalWithBalance);
-    if (dailyAmountEl) dailyAmountEl.textContent = formatCurrency(dailyAmount);
-    if (workingDaysEl) workingDaysEl.textContent = workingDays.toString();
-    if (filteredCountEl) filteredCountEl.textContent = ${filteredBills.length} contas;
+    if (totalBillsEl) {
+        totalBillsEl.textContent = formatCurrency(totalBills);
+        console.log('Total contas atualizado:', formatCurrency(totalBills));
+    }
+    if (bankBalanceEl) {
+        bankBalanceEl.textContent = formatCurrency(bankBalance);
+        console.log('Saldo bancário atualizado:', formatCurrency(bankBalance));
+    }
+    if (totalGeneralEl) {
+        totalGeneralEl.textContent = formatCurrency(totalWithBalance);
+        console.log('Total geral atualizado:', formatCurrency(totalWithBalance));
+    }
+    if (dailyAmountEl) {
+        dailyAmountEl.textContent = formatCurrency(dailyAmount);
+        console.log('Valor por dia atualizado:', formatCurrency(dailyAmount));
+    }
+    if (workingDaysEl) {
+        workingDaysEl.textContent = workingDays.toString();
+        console.log('Dias úteis atualizado:', workingDays);
+    }
+    if (filteredCountEl) {
+        filteredCountEl.textContent = ${filteredBills.length} contas;
+        console.log('Contador de contas atualizado:', filteredBills.length);
+    }
     
     // Atualizar cor do saldo bancário
     if (bankBalanceEl) {
@@ -151,6 +179,8 @@ function updateSummary() {
             bankBalanceEl.style.color = '#6b7280';
         }
     }
+    
+    console.log('Resumo atualizado com sucesso!');
 }
 
 // Função para atualizar saldo bancário
@@ -322,6 +352,7 @@ function deleteBill(id) {
 
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== INICIANDO APLICAÇÃO ===');
     console.log('DOM carregado, inicializando aplicação...');
     
     // Carregar saldo bancário do localStorage
@@ -332,11 +363,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (balanceInput) {
             balanceInput.value = bankBalance;
         }
+        console.log('Saldo bancário carregado:', bankBalance);
     }
     
+    // Garantir que as contas filtradas estejam corretas
+    filteredBills = [...bills];
+    console.log('Contas filtradas inicializadas:', filteredBills.length);
+    
     // Renderizar contas e atualizar resumo
+    console.log('Chamando renderBills()...');
     renderBills();
+    
+    console.log('Chamando updateSummary()...');
     updateSummary();
     
-    console.log('Aplicação inicializada com sucesso!');
+    console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
 });
+
+// Forçar renderização após 1 segundo (fallback)
+setTimeout(function() {
+    console.log('Fallback: Forçando renderização após 1 segundo...');
+    if (document.getElementById('billsTableBody')) {
+        renderBills();
+        updateSummary();
+    }
+}, 1000);
