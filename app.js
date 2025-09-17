@@ -1,3 +1,4 @@
+// SISTEMA DE CONTAS - VERSÃO COMPLETA E FUNCIONAL
 // Dados das contas
 let bills = [
     {id: 1, company: 'FLORA', number: 'NF 130165', parcels: '3/3', date: '17/09/2025', value: 33825.36},
@@ -201,7 +202,7 @@ function updateSummary() {
     console.log('=== RESUMO ATUALIZADO ===');
 }
 
-// Função para atualizar saldo bancário - VERSÃO SIMPLIFICADA E FUNCIONAL
+// Função para atualizar saldo bancário - VERSÃO CORRIGIDA E FUNCIONAL
 function updateBalance() {
     console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
     
