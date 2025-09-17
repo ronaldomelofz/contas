@@ -139,7 +139,7 @@ if __name__ == '__main__':
     load_bills_from_file()
     print(f"Sistema carregado com {len(bills)} contas")
     print("Acesse: http://localhost:3000")
-    app.run(debug=True, host="0.0.0.0", port=3000)
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
 
 
 @app.route('/import_bills', methods=['POST'])

@@ -1,6 +1,23 @@
 [build]
-  command = "pip install -r requirements.txt && python app.py"
-  publish = "."
+  command = \
+pip
+install
+-r
+requirements.txt\
+  publish = \.\
 
 [build.environment]
-  PYTHON_VERSION = "3.9"
+  PYTHON_VERSION = \3.9\
+
+[[redirects]]
+  from = \/*\
+  to = \/index.html\
+  status = 200
+
+[functions]
+  directory = \netlify/functions\
+
+[dev]
+  command = \python
+app.py\
+  port = 3000
