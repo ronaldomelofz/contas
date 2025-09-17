@@ -59,77 +59,110 @@ function calculateWorkingDays(startDate, endDate) {
     return workingDays;
 }
 
-// Função para atualizar resumo
-function updateSummary() {
-    const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
-    const totalGeneral = totalBills + bankBalance;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    const workingDays = calculateWorkingDays(startDate, endDate);
-    const dailyAmount = workingDays > 0 ? totalGeneral / workingDays : 0;
-
-    document.getElementById('totalBills').textContent = formatCurrency(totalBills);
-    document.getElementById('bankBalance').textContent = formatCurrency(bankBalance);
-    document.getElementById('totalGeneral').textContent = formatCurrency(totalGeneral);
-    document.getElementById('dailyAmount').textContent = formatCurrency(dailyAmount);
-    document.getElementById('workingDays').textContent = workingDays;
-    document.getElementById('filteredCount').textContent = filteredBills.length + ' contas';
-}
-
-// Função para renderizar tabela
+// Função para renderizar contas na tabela
 function renderBills() {
     const tbody = document.getElementById('billsTableBody');
     tbody.innerHTML = '';
-
+    
     filteredBills.forEach(bill => {
         const row = document.createElement('tr');
+        
+        const today = new Date();
+        const billDate = new Date(bill.date.split('/').reverse().join('-'));
+        const isOverdue = billDate < today;
+        const isToday = billDate.toDateString() === today.toDateString();
+        
+        let statusClass = 'bill-status';
+        let statusText = 'A pagar';
+        
+        if (isOverdue) {
+            statusClass += ' bill-overdue';
+            statusText = 'Vencida';
+        } else if (isToday) {
+            statusClass += ' bill-today';
+            statusText = 'Hoje';
+        }
+        
         row.innerHTML = 
             <td>
-                <div class=\
-bill-company\></div>
-                <div class=\bill-number\></div>
+                <div class="bill-company"></div>
+                <div class="bill-number"></div>
             </td>
             <td>
-                <span class=\bill-parcels\></span>
+                <span class="bill-parcels"></span>
             </td>
-            <td class=\bill-date\></td>
+            <td class="bill-date"></td>
             <td>
-                <span class=\bill-status\>A pagar</span>
-            </td>
-            <td>
-                <div class=\bill-value\></div>
+                <span class=""></span>
             </td>
             <td>
-                <div class=\bill-actions\>
-                    <button class=\btn
-btn-edit\ onclick=\editBill
-\>
-                        <i class=\fas
-fa-edit\></i> Editar
+                <div class="bill-value"></div>
+            </td>
+            <td>
+                <div class="bill-actions">
+                    <button class="btn btn-edit" onclick="editBill()">
+                        <i class="fas fa-edit"></i> Editar
                     </button>
-                    <button class=\btn
-btn-delete\ onclick=\deleteBill
-\>
-                        <i class=\fas
-fa-trash\></i> Excluir
+                    <button class="btn btn-delete" onclick="deleteBill()">
+                        <i class="fas fa-trash"></i> Excluir
                     </button>
                 </div>
             </td>
         ;
+        
         tbody.appendChild(row);
     });
 }
 
-// Função para aplicar filtro
+// Função para atualizar resumo
+function updateSummary() {
+    const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
+    const totalWithBalance = totalBills + bankBalance;
+    const workingDays = 12; // Dias úteis de 17/09 a 30/09
+    const dailyAmount = totalWithBalance / workingDays;
+    
+    document.getElementById('totalBills').textContent = formatCurrency(totalBills);
+    document.getElementById('bankBalanceDisplay').textContent = formatCurrency(bankBalance);
+    document.getElementById('totalGeneral').textContent = formatCurrency(totalWithBalance);
+    document.getElementById('dailyAmount').textContent = formatCurrency(dailyAmount);
+    document.getElementById('workingDays').textContent = workingDays.toString();
+    document.getElementById('filteredCount').textContent = ${filteredBills.length} contas;
+    
+    // Atualizar cor do saldo bancário
+    const balanceDisplay = document.getElementById('bankBalanceDisplay');
+    balanceDisplay.className = 'value';
+    if (bankBalance > 0) {
+        balanceDisplay.style.color = '#dc2626';
+    } else if (bankBalance < 0) {
+        balanceDisplay.style.color = '#16a34a';
+    } else {
+        balanceDisplay.style.color = '#6b7280';
+    }
+}
+
+// Função para atualizar saldo bancário
+function updateBalance() {
+    const input = document.getElementById('balanceInput');
+    const balance = parseFloat(input.value) || 0;
+    
+    bankBalance = balance;
+    updateSummary();
+    
+    // Salvar no localStorage
+    localStorage.setItem('bankBalance', balance.toString());
+}
+
+// Função para aplicar filtro de datas
 function applyFilter() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     
     if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
         filteredBills = bills.filter(bill => {
             const billDate = new Date(bill.date.split('/').reverse().join('-'));
-            const start = new Date(startDate);
-            const end = new Date(endDate);
             return billDate >= start && billDate <= end;
         });
     } else {
@@ -149,36 +182,15 @@ function clearFilter() {
     updateSummary();
 }
 
-// Função para atualizar saldo
-function updateBalance() {
-    const input = document.getElementById('balanceInput');
-    const display = document.getElementById('balanceDisplay');
-    const balance = parseFloat(input.value) || 0;
-
-    bankBalance = balance;
-    display.textContent = formatCurrency(balance);
-
-    display.className = 'balance-display';
-    if (balance > 0) {
-        display.classList.add('balance-positive');
-    } else if (balance < 0) {
-        display.classList.add('balance-negative');
-    } else {
-        display.classList.add('balance-zero');
-    }
-
-    updateSummary();
-}
-
 // Função para importar contas
 function importBills() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
-
+    
     if (file) {
         selectedFile = file;
         document.getElementById('modalTitle').textContent = 'Importar Contas';
-        document.getElementById('modalMessage').textContent = Deseja importar as contas do arquivo \\?;
+        document.getElementById('modalMessage').textContent = Deseja importar as contas do arquivo ""?;
         document.getElementById('modal').style.display = 'block';
     }
 }
@@ -189,23 +201,23 @@ function confirmImport() {
         const reader = new FileReader();
         reader.onload = function(e) {
             const content = e.target.result;
-            const lines = content.split('\\n');
+            const lines = content.split('\n');
             const newBills = [];
             
             lines.forEach((line, index) => {
-                if (line.trim() && !line.includes('DESCRIÇÃO') && !line.includes('TOTAL') && !line.includes('DIAS')) {
-                    const parts = line.split('\\t');
+                if (line.trim() && index > 0) { // Pular cabeçalho
+                    const parts = line.split('\t');
                     if (parts.length >= 4) {
                         try {
                             const fullName = parts[0].trim();
                             const parcels = parts[1].trim();
                             const dateStr = parts[2].trim();
                             const valueStr = parts[3].trim();
-
-                            const nameMatch = fullName.match(/(.*)\\s*-\\s*(NF\\s*\\d+.*)/);
+                            
+                            const nameMatch = fullName.match(/(.*)\s*-\s*(NF\s*\d+.*)/);
                             const company = nameMatch ? nameMatch[1].trim() : fullName;
                             const number = nameMatch ? nameMatch[2].trim() : '';
-
+                            
                             const value = parseFloat(valueStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
                             
                             newBills.push({
@@ -240,10 +252,10 @@ function confirmImport() {
 
 // Função para baixar template
 function downloadTemplate() {
-    const template = EMPRESA - NF NUMERO\\tPARCELA\\tDATA\\tVALOR
-ARTECOLA - NF 651630\\t1/3\\t16/09/2025\\tR$ 1.498,72
-EXEMPLO - NF 123456\\t2/3\\t17/09/2025\\tR$ 2.500,00
-TESTE - NF 789012\\t3/3\\t18/09/2025\\tR$ 1.200,50;
+    const template = EMPRESA - NF NUMERO\tPARCELA\tDATA\tVALOR
+ARTECOLA - NF 651630\t1/3\t16/09/2025\tR$ 1.498,72
+EXEMPLO - NF 123456\t2/3\t17/09/2025\tR$ 2.500,00
+TESTE - NF 789012\t3/3\t18/09/2025\tR$ 1.200,50;
     
     const blob = new Blob([template], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -265,7 +277,25 @@ function closeModal() {
 
 // Funções para editar e excluir
 function editBill(id) {
-    alert('Funcionalidade de edição será implementada em breve!');
+    const bill = bills.find(b => b.id === id);
+    if (bill) {
+        const newCompany = prompt('Empresa:', bill.company);
+        const newNumber = prompt('Número:', bill.number);
+        const newParcels = prompt('Parcelas:', bill.parcels);
+        const newDate = prompt('Data (DD/MM/AAAA):', bill.date);
+        const newValue = prompt('Valor:', bill.value);
+        
+        if (newCompany && newDate && newValue) {
+            bill.company = newCompany;
+            bill.number = newNumber;
+            bill.parcels = newParcels;
+            bill.date = newDate;
+            bill.value = parseFloat(newValue);
+            
+            renderBills();
+            updateSummary();
+        }
+    }
 }
 
 function deleteBill(id) {
@@ -279,6 +309,13 @@ function deleteBill(id) {
 
 // Inicializar aplicação
 document.addEventListener('DOMContentLoaded', function() {
+    // Carregar saldo bancário do localStorage
+    const savedBalance = localStorage.getItem('bankBalance');
+    if (savedBalance) {
+        bankBalance = parseFloat(savedBalance);
+        document.getElementById('balanceInput').value = bankBalance;
+    }
+    
     renderBills();
     updateSummary();
 });
