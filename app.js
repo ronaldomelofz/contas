@@ -62,6 +62,11 @@ function calculateWorkingDays(startDate, endDate) {
 // Função para renderizar contas na tabela
 function renderBills() {
     const tbody = document.getElementById('billsTableBody');
+    if (!tbody) {
+        console.error('Elemento billsTableBody não encontrado');
+        return;
+    }
+    
     tbody.innerHTML = '';
     
     filteredBills.forEach(bill => {
@@ -121,22 +126,30 @@ function updateSummary() {
     const workingDays = 12; // Dias úteis de 17/09 a 30/09
     const dailyAmount = totalWithBalance / workingDays;
     
-    document.getElementById('totalBills').textContent = formatCurrency(totalBills);
-    document.getElementById('bankBalanceDisplay').textContent = formatCurrency(bankBalance);
-    document.getElementById('totalGeneral').textContent = formatCurrency(totalWithBalance);
-    document.getElementById('dailyAmount').textContent = formatCurrency(dailyAmount);
-    document.getElementById('workingDays').textContent = workingDays.toString();
-    document.getElementById('filteredCount').textContent = ${filteredBills.length} contas;
+    const totalBillsEl = document.getElementById('totalBills');
+    const bankBalanceEl = document.getElementById('bankBalanceDisplay');
+    const totalGeneralEl = document.getElementById('totalGeneral');
+    const dailyAmountEl = document.getElementById('dailyAmount');
+    const workingDaysEl = document.getElementById('workingDays');
+    const filteredCountEl = document.getElementById('filteredCount');
+    
+    if (totalBillsEl) totalBillsEl.textContent = formatCurrency(totalBills);
+    if (bankBalanceEl) bankBalanceEl.textContent = formatCurrency(bankBalance);
+    if (totalGeneralEl) totalGeneralEl.textContent = formatCurrency(totalWithBalance);
+    if (dailyAmountEl) dailyAmountEl.textContent = formatCurrency(dailyAmount);
+    if (workingDaysEl) workingDaysEl.textContent = workingDays.toString();
+    if (filteredCountEl) filteredCountEl.textContent = ${filteredBills.length} contas;
     
     // Atualizar cor do saldo bancário
-    const balanceDisplay = document.getElementById('bankBalanceDisplay');
-    balanceDisplay.className = 'value';
-    if (bankBalance > 0) {
-        balanceDisplay.style.color = '#dc2626';
-    } else if (bankBalance < 0) {
-        balanceDisplay.style.color = '#16a34a';
-    } else {
-        balanceDisplay.style.color = '#6b7280';
+    if (bankBalanceEl) {
+        bankBalanceEl.className = 'value';
+        if (bankBalance > 0) {
+            bankBalanceEl.style.color = '#dc2626';
+        } else if (bankBalance < 0) {
+            bankBalanceEl.style.color = '#16a34a';
+        } else {
+            bankBalanceEl.style.color = '#6b7280';
+        }
     }
 }
 
@@ -307,15 +320,23 @@ function deleteBill(id) {
     }
 }
 
-// Inicializar aplicação
+// Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado, inicializando aplicação...');
+    
     // Carregar saldo bancário do localStorage
     const savedBalance = localStorage.getItem('bankBalance');
     if (savedBalance) {
         bankBalance = parseFloat(savedBalance);
-        document.getElementById('balanceInput').value = bankBalance;
+        const balanceInput = document.getElementById('balanceInput');
+        if (balanceInput) {
+            balanceInput.value = bankBalance;
+        }
     }
     
+    // Renderizar contas e atualizar resumo
     renderBills();
     updateSummary();
+    
+    console.log('Aplicação inicializada com sucesso!');
 });
