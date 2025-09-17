@@ -61,7 +61,7 @@ function calculateWorkingDays(startDate, endDate) {
 
 // Função para renderizar contas na tabela
 function renderBills() {
-    console.log('Iniciando renderização das contas...');
+    console.log('=== RENDERIZANDO CONTAS ===');
     console.log('Total de contas:', bills.length);
     console.log('Contas filtradas:', filteredBills.length);
     
@@ -73,8 +73,13 @@ function renderBills() {
     
     tbody.innerHTML = '';
     
+    if (filteredBills.length === 0) {
+        console.log('Nenhuma conta para renderizar');
+        return;
+    }
+    
     filteredBills.forEach((bill, index) => {
-        console.log(Renderizando conta :, bill.company);
+        console.log(Renderizando conta :, bill.company, bill.value);
         
         const row = document.createElement('tr');
         
@@ -127,17 +132,22 @@ function renderBills() {
         tbody.appendChild(row);
     });
     
-    console.log('Renderização concluída!');
+    console.log('=== RENDERIZAÇÃO CONCLUÍDA ===');
 }
 
 // Função para atualizar resumo
 function updateSummary() {
-    console.log('Atualizando resumo...');
+    console.log('=== ATUALIZANDO RESUMO ===');
     
     const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
     const totalWithBalance = totalBills + bankBalance;
     const workingDays = 12; // Dias úteis de 17/09 a 30/09
     const dailyAmount = totalWithBalance / workingDays;
+    
+    console.log('Total contas:', totalBills);
+    console.log('Saldo bancário:', bankBalance);
+    console.log('Total geral:', totalWithBalance);
+    console.log('Valor por dia:', dailyAmount);
     
     const totalBillsEl = document.getElementById('totalBills');
     const bankBalanceEl = document.getElementById('bankBalanceDisplay');
@@ -145,6 +155,7 @@ function updateSummary() {
     const dailyAmountEl = document.getElementById('dailyAmount');
     const workingDaysEl = document.getElementById('workingDays');
     const filteredCountEl = document.getElementById('filteredCount');
+    const balanceDisplayEl = document.getElementById('balanceDisplay');
     
     if (totalBillsEl) {
         totalBillsEl.textContent = formatCurrency(totalBills);
@@ -170,6 +181,10 @@ function updateSummary() {
         filteredCountEl.textContent = ${filteredBills.length} contas;
         console.log('Contador de contas atualizado:', filteredBills.length);
     }
+    if (balanceDisplayEl) {
+        balanceDisplayEl.textContent = formatCurrency(bankBalance);
+        console.log('Display do saldo atualizado:', formatCurrency(bankBalance));
+    }
     
     // Atualizar cor do saldo bancário
     if (bankBalanceEl) {
@@ -183,28 +198,31 @@ function updateSummary() {
         }
     }
     
-    console.log('Resumo atualizado com sucesso!');
+    console.log('=== RESUMO ATUALIZADO ===');
 }
 
 // Função para atualizar saldo bancário
 function updateBalance() {
-    console.log('Atualizando saldo bancário...');
+    console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
     
     const input = document.getElementById('balanceInput');
     if (!input) {
         console.error('Campo balanceInput não encontrado!');
+        alert('Erro: Campo de saldo não encontrado!');
         return;
     }
     
     const balance = parseFloat(input.value) || 0;
-    console.log('Novo saldo:', balance);
+    console.log('Novo saldo digitado:', input.value);
+    console.log('Novo saldo processado:', balance);
     
     bankBalance = balance;
     
     // Atualizar o campo de exibição
-    const balanceDisplay = document.querySelector('.balance-display');
+    const balanceDisplay = document.getElementById('balanceDisplay');
     if (balanceDisplay) {
         balanceDisplay.textContent = formatCurrency(bankBalance);
+        console.log('Display do saldo atualizado para:', formatCurrency(bankBalance));
     }
     
     updateSummary();
@@ -225,11 +243,13 @@ function updateBalance() {
             button.style.background = '';
         }, 2000);
     }
+    
+    console.log('=== SALDO BANCÁRIO ATUALIZADO ===');
 }
 
 // Função para aplicar filtro de datas
 function applyFilter() {
-    console.log('Aplicando filtro de datas...');
+    console.log('=== APLICANDO FILTRO ===');
     
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
@@ -254,11 +274,13 @@ function applyFilter() {
     
     renderBills();
     updateSummary();
+    
+    console.log('=== FILTRO APLICADO ===');
 }
 
 // Função para limpar filtro
 function clearFilter() {
-    console.log('Limpando filtro...');
+    console.log('=== LIMPANDO FILTRO ===');
     
     document.getElementById('startDate').value = '2025-09-17';
     document.getElementById('endDate').value = '2025-09-30';
@@ -267,12 +289,12 @@ function clearFilter() {
     renderBills();
     updateSummary();
     
-    console.log('Filtro limpo com sucesso');
+    console.log('=== FILTRO LIMPO ===');
 }
 
 // Função para importar contas
 function importBills() {
-    console.log('Iniciando importação de contas...');
+    console.log('=== INICIANDO IMPORTAÇÃO ===');
     
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -290,7 +312,7 @@ function importBills() {
 
 // Função para confirmar importação
 function confirmImport() {
-    console.log('Confirmando importação...');
+    console.log('=== CONFIRMANDO IMPORTAÇÃO ===');
     
     if (selectedFile) {
         const reader = new FileReader();
@@ -354,7 +376,7 @@ function confirmImport() {
 
 // Função para baixar template
 function downloadTemplate() {
-    console.log('Baixando template...');
+    console.log('=== BAIXANDO TEMPLATE ===');
     
     const template = EMPRESA - NF NUMERO\tPARCELA\tDATA\tVALOR
 ARTECOLA - NF 651630\t1/3\t16/09/2025\tR$ 1.498,72
@@ -376,7 +398,7 @@ TESTE - NF 789012\t3/3\t18/09/2025\tR$ 1.200,50;
 
 // Função para fechar modal
 function closeModal() {
-    console.log('Fechando modal...');
+    console.log('=== FECHANDO MODAL ===');
     
     document.getElementById('modal').style.display = 'none';
     selectedFile = null;
@@ -385,7 +407,7 @@ function closeModal() {
 
 // Funções para editar e excluir
 function editBill(id) {
-    console.log('Editando conta ID:', id);
+    console.log('=== EDITANDO CONTA ===', id);
     
     const bill = bills.find(b => b.id === id);
     if (bill) {
@@ -421,7 +443,7 @@ function editBill(id) {
 }
 
 function deleteBill(id) {
-    console.log('Excluindo conta ID:', id);
+    console.log('=== EXCLUINDO CONTA ===', id);
     
     if (confirm('Tem certeza que deseja excluir esta conta?')) {
         const originalLength = bills.length;
@@ -471,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Forçar renderização após 1 segundo (fallback)
 setTimeout(function() {
-    console.log('Fallback: Forçando renderização após 1 segundo...');
+    console.log('=== FALLBACK: FORÇANDO RENDERIZAÇÃO ===');
     if (document.getElementById('billsTableBody')) {
         renderBills();
         updateSummary();
