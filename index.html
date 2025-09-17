@@ -568,7 +568,7 @@
                 </div>
                 <div class="summary-item">
                     <span class="label">Dias Úteis</span>
-                    <span class="value">{{ working_days }}</span>
+                    <span class="value">12</span>
                 </div>
             </div>
         </header>
@@ -583,11 +583,11 @@
                         <div class="filter-controls">
                             <div class="filter-group">
                                 <label for="startDate">Data Inicial</label>
-                                <input type="date" id="startDate" name="startDate" value="{{ start_date_filter }}">
+                                <input type="date" id="startDate" name="startDate" value="2025-09-30">
                             </div>
                             <div class="filter-group">
                                 <label for="endDate">Data Final</label>
-                                <input type="date" id="endDate" name="endDate" value="{{ end_date_filter }}">
+                                <input type="date" id="endDate" name="endDate" value="2025-09-30">
                             </div>
                             <div class="filter-buttons">
                                 <button type="submit" class="btn btn-primary">
@@ -599,7 +599,7 @@
                             </div>
                             <div class="filter-info">
                                 <i class="fas fa-info-circle"></i> 
-                                {{ bills|length }} contas
+                                <span id="filteredCount">30 contas</span>
                             </div>
                         </div>
                     </form>
