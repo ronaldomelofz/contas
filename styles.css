@@ -1,0 +1,1063 @@
+/* SISTEMA DE CONTAS - ESTILOS CSS */
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* HEADER */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* NAVEGAÇÃO POR ABAS */
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tab-button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.tab-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* CONTEÚDO DAS ABAS */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* CARDS DE RESUMO */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.summary-card h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.card-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.card-info {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* DESTAQUE PARA O CARD "TOTAL GERAL" */
+.summary-card:nth-child(2) {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    animation: pulse 2s infinite;
+    box-shadow: 0 8px 32px rgba(255, 154, 158, 0.3);
+}
+
+.summary-card:nth-child(2) .card-value {
+    color: #e74c3c;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card:nth-child(2) h3 {
+    color: #c0392b;
+    font-weight: 700;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 8px 32px rgba(255, 154, 158, 0.3);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 12px 40px rgba(255, 154, 158, 0.5);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 8px 32px rgba(255, 154, 158, 0.3);
+    }
+}
+
+/* FILTROS DE DATA */
+.date-filters {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.date-filters h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.date-input {
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* BOTÕES */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    min-height: 44px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-filter {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-clear {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-shadow: 0 2px 10px rgba(78, 205, 196, 0.3);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+
+.btn-add-bill {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 1.1rem;
+    padding: 15px 25px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-cancel-form {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-import {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-export {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.btn-reset {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+/* SEÇÃO DE ADICIONAR CONTA */
+.add-bill-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.add-bill-section h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+/* TABELA DE CONTAS */
+.bills-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bills-section h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bills-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    min-width: 600px;
+}
+
+.bills-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.bills-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.bills-table tr:hover {
+    background: #f8f9fa;
+}
+
+.bill-company {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.bill-number {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.bill-parcels {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.bill-date {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.bill-value {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 1.1rem;
+}
+
+.bill-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* PAINEL ADMINISTRATIVO */
+.admin-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-header h3 {
+    color: #667eea;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.admin-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border-left: 4px solid #667eea;
+}
+
+.admin-section h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.admin-section p {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.stat-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item h5 {
+    color: #667eea;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.stat-item p {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* MODAIS */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.modal-footer {
+    padding: 20px 30px;
+    background: #f8f9fa;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+/* MODAL DE LOGIN ADMINISTRATIVO */
+.login-modal-content {
+    max-width: 400px;
+}
+
+.login-form {
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.login-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+/* MODAL DE ADICIONAR CONTA */
+.add-bill-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.add-bill-modal-content {
+    background: white;
+    margin: 3% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.add-bill-form {
+    padding: 30px;
+}
+
+.add-bill-form .form-group {
+    margin-bottom: 20px;
+}
+
+.add-bill-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.add-bill-form .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.add-bill-form .form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.add-bill-form .form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* RESPONSIVIDADE MOBILE - VERSÃO SLIM E PROFISSIONAL */
+@media (max-width: 768px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .header {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .tab-navigation {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .tab-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .summary-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .summary-card {
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    .card-value {
+        font-size: 1.5rem;
+    }
+    
+    .date-filters {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+    
+    .date-filters h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .date-input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+    
+    .bills-section {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+    
+    .bills-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .bills-table {
+        font-size: 0.85rem;
+        min-width: 500px;
+    }
+    
+    .bills-table th {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .bills-table td {
+        padding: 10px 8px;
+    }
+    
+    .bill-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn-edit, .btn-delete {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        min-height: 36px;
+    }
+    
+    .add-bill-section {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+    
+    .add-bill-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .admin-panel {
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .admin-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .admin-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .admin-section h4 {
+        font-size: 1.1rem;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+    }
+    
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 15px;
+    }
+    
+    .stat-item h5 {
+        font-size: 0.9rem;
+    }
+    
+    .stat-item p {
+        font-size: 1.2rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+    }
+    
+    .login-modal-content {
+        max-width: 350px;
+    }
+    
+    .login-form {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .add-bill-modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .add-bill-form {
+        padding: 20px;
+    }
+    
+    .add-bill-form .form-actions {
+        flex-direction: column;
+        margin-top: 20px;
+    }
+}
+
+/* RESPONSIVIDADE PARA TELAS MUITO PEQUENAS */
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+    
+    .header {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .summary-cards {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .summary-card {
+        padding: 12px;
+    }
+    
+    .card-value {
+        font-size: 1.3rem;
+    }
+    
+    .date-filters {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .bills-section {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .bills-table {
+        font-size: 0.8rem;
+        min-width: 450px;
+    }
+    
+    .bills-table th {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+    
+    .bills-table td {
+        padding: 8px 6px;
+    }
+    
+    .btn-edit, .btn-delete {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+        min-height: 32px;
+    }
+    
+    .add-bill-section {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .admin-panel {
+        padding: 12px;
+    }
+    
+    .admin-section {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .stat-item {
+        padding: 12px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 5% auto;
+    }
+    
+    .modal-header {
+        padding: 12px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 12px 15px;
+    }
+    
+    .login-form {
+        padding: 15px;
+    }
+    
+    .add-bill-form {
+        padding: 15px;
+    }
+}
+
+/* ANIMAÇÕES E EFEITOS ESPECIAIS */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.summary-card, .date-filters, .bills-section, .add-bill-section {
+    animation: fadeIn 0.6s ease;
+}
+
+/* SCROLLBAR PERSONALIZADA */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4190);
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
