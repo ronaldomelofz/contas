@@ -527,36 +527,6 @@ function deleteBill(id) {
     }
 }
 
-// Função para resetar dados (voltar ao padrão)
-function resetData() {
-    if (confirm('Tem certeza que deseja resetar todos os dados para o padrão? Esta ação não pode ser desfeita!')) {
-        bills = [...defaultBills];
-        filteredBills = [...bills];
-        bankBalance = 0.0;
-        
-        // Limpar localStorage
-        localStorage.removeItem(STORAGE_KEYS.BILLS);
-        localStorage.removeItem(STORAGE_KEYS.BANK_BALANCE);
-        localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
-        
-        // Salvar dados padrão
-        saveBillsToStorage();
-        localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, '0');
-        
-        // Atualizar interface
-        const balanceInput = document.getElementById('balanceInput');
-        if (balanceInput) {
-            balanceInput.value = '0';
-        }
-        
-        renderBills();
-        updateSummary();
-        
-        alert('Dados resetados com sucesso!');
-        console.log('Dados resetados para o padrão');
-    }
-}
-
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
@@ -634,10 +604,8 @@ window.downloadTemplate = downloadTemplate;
 window.closeModal = closeModal;
 window.editBill = editBill;
 window.deleteBill = deleteBill;
-window.resetData = resetData;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
 console.log('updateBalance disponível:', typeof window.updateBalance);
 console.log('applyFilter disponível:', typeof window.applyFilter);
 console.log('clearFilter disponível:', typeof window.clearFilter);
-console.log('resetData disponível:', typeof window.resetData);
