@@ -8,11 +8,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- MODAL DE LOGIN ADMINISTRATIVO -->
+    <div id="adminLoginModal" class="modal admin-login-modal">
+        <div class="modal-content admin-login-content">
+            <div class="login-header">
+                <h2><i class="fas fa-shield-alt"></i> Acesso Administrativo</h2>
+                <p>Digite suas credenciais para acessar as funções administrativas</p>
+            </div>
+            <form id="adminLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="adminUsername">Usuário</label>
+                    <input type="text" id="adminUsername" required placeholder="Digite seu usuário">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Senha</label>
+                    <input type="password" id="adminPassword" required placeholder="Digite sua senha">
+                </div>
+                <div class="login-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAdminLogin()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+                <div id="loginError" class="login-error" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i> Usuário ou senha incorretos!
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="container">
-        <!-- HEADER -->
+        <!-- HEADER COM ABAS -->
         <header class="header">
             <h1><i class="fas fa-receipt"></i> CONTAS</h1>
             
+            <!-- NAVEGAÇÃO POR ABAS -->
+            <nav class="tab-navigation">
+                <button class="tab-button active" onclick="switchTab('main')" id="mainTab">
+                    <i class="fas fa-home"></i> Principal
+                </button>
+                <button class="tab-button" onclick="openAdminLogin()" id="adminTab">
+                    <i class="fas fa-cog"></i> Administrador
+                </button>
+            </nav>
+        </header>
+
+        <!-- ABA PRINCIPAL -->
+        <div id="mainTabContent" class="tab-content active">
             <!-- CARDS DE RESUMO -->
             <div class="summary-cards">
                 <div class="summary-card">
@@ -65,89 +109,137 @@
                     </div>
                 </div>
             </div>
-        </header>
 
-        <!-- CONTROLES -->
-        <div class="controls">
-            <div class="filter-section">
-                <h3><i class="fas fa-filter"></i> Filtro por Período</h3>
-                <div class="filter-controls">
-                    <div class="date-inputs">
-                        <div class="input-group">
-                            <label for="startDate">Data Inicial</label>
-                            <input type="date" id="startDate" value="2025-09-17">
+            <!-- CONTROLES PRINCIPAIS -->
+            <div class="controls">
+                <div class="filter-section">
+                    <h3><i class="fas fa-filter"></i> Filtro por Período</h3>
+                    <div class="filter-controls">
+                        <div class="date-inputs">
+                            <div class="input-group">
+                                <label for="startDate">Data Inicial</label>
+                                <input type="date" id="startDate" value="2025-09-17">
+                            </div>
+                            <div class="input-group">
+                                <label for="endDate">Data Final</label>
+                                <input type="date" id="endDate" value="2025-09-30">
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <label for="endDate">Data Final</label>
-                            <input type="date" id="endDate" value="2025-09-30">
+                        <div class="filter-buttons">
+                            <button class="btn btn-primary" onclick="applyFilter()">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearFilter()">
+                                <i class="fas fa-times"></i> Limpar
+                            </button>
+                            <button class="btn btn-info" id="filteredCount">30 contas</button>
                         </div>
                     </div>
-                    <div class="filter-buttons">
-                        <button class="btn btn-primary" onclick="applyFilter()">
-                            <i class="fas fa-search"></i> Filtrar
-                        </button>
-                        <button class="btn btn-secondary" onclick="clearFilter()">
-                            <i class="fas fa-times"></i> Limpar
-                        </button>
-                        <button class="btn btn-info" id="filteredCount">30 contas</button>
+                    
+                    <div class="balance-section">
+                        <label for="balanceInput"><i class="fas fa-university"></i> Saldo Bancário</label>
+                        <div class="balance-controls">
+                            <input type="number" id="balanceInput" placeholder="Saldo" step="0.01">
+                            <button class="btn btn-primary" onclick="updateBalance()">
+                                <i class="fas fa-sync"></i> Atualizar
+                            </button>
+                            <div class="balance-display" id="balanceDisplay">
+                                R$ 0,00
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="balance-section">
-                    <label for="balanceInput"><i class="fas fa-university"></i> Saldo Bancário</label>
-                    <div class="balance-controls">
-                        <input type="number" id="balanceInput" placeholder="Saldo" step="0.01">
-                        <button class="btn btn-primary" onclick="updateBalance()">
-                            <i class="fas fa-sync"></i> Atualizar
+
+                <div class="add-section">
+                    <h3><i class="fas fa-plus-circle"></i> Adicionar Nova Conta</h3>
+                    <div class="add-controls">
+                        <button class="btn btn-success" onclick="openAddModal()">
+                            <i class="fas fa-plus"></i> Nova Conta
                         </button>
-                        <div class="balance-display" id="balanceDisplay">
-                            R$ 0,00
-                        </div>
+                        <span class="add-info">Cadastrar nova conta manualmente</span>
                     </div>
                 </div>
             </div>
 
-            <div class="add-section">
-                <h3><i class="fas fa-plus-circle"></i> Adicionar Nova Conta</h3>
-                <div class="add-controls">
-                    <button class="btn btn-success" onclick="openAddModal()">
-                        <i class="fas fa-plus"></i> Nova Conta
-                    </button>
-                    <span class="add-info">Cadastrar nova conta manualmente</span>
-                </div>
-            </div>
+            <!-- TABELA DE CONTAS -->
+            <main class="main">
+                <table class="bills-table">
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Parcelas</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billsTableBody">
+                        <!-- As contas serão carregadas via JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
 
-            <div class="import-section">
-                <h3><i class="fas fa-upload"></i> Importar Contas</h3>
-                <div class="import-controls">
-                    <input type="file" id="fileInput" class="file-input" accept=".txt" onchange="importBills()">
-                    <label for="fileInput" class="file-label">
-                        <i class="fas fa-upload"></i> Escolher Arquivo
-                    </label>
-                    <button class="btn btn-info" onclick="downloadTemplate()">
-                        <i class="fas fa-download"></i> Template
-                    </button>
+        <!-- ABA ADMINISTRADOR -->
+        <div id="adminTabContent" class="tab-content">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2><i class="fas fa-shield-alt"></i> Painel Administrativo</h2>
+                    <p>Gerencie a importação e exportação de dados do sistema</p>
+                </div>
+
+                <div class="admin-sections">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-upload"></i> Importar Contas</h3>
+                        <div class="admin-controls">
+                            <input type="file" id="fileInput" class="file-input" accept=".txt" onchange="importBills()">
+                            <label for="fileInput" class="file-label">
+                                <i class="fas fa-upload"></i> Escolher Arquivo
+                            </label>
+                            <button class="btn btn-info" onclick="downloadTemplate()">
+                                <i class="fas fa-download"></i> Template
+                            </button>
+                        </div>
+                        <div class="admin-info">
+                            <p><i class="fas fa-info-circle"></i> Importe arquivos .txt com as contas no formato correto</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3><i class="fas fa-database"></i> Gerenciar Dados</h3>
+                        <div class="admin-controls">
+                            <button class="btn btn-warning" onclick="exportData()">
+                                <i class="fas fa-download"></i> Exportar Dados
+                            </button>
+                            <button class="btn btn-danger" onclick="resetAllData()">
+                                <i class="fas fa-trash"></i> Resetar Sistema
+                            </button>
+                        </div>
+                        <div class="admin-info">
+                            <p><i class="fas fa-info-circle"></i> Exporte os dados atuais ou reset o sistema para o estado inicial</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3><i class="fas fa-chart-bar"></i> Estatísticas</h3>
+                        <div class="admin-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total de Contas:</span>
+                                <span class="stat-value" id="adminTotalBills">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Última Atualização:</span>
+                                <span class="stat-value" id="adminLastUpdate">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Tamanho dos Dados:</span>
+                                <span class="stat-value" id="adminDataSize">-</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- TABELA DE CONTAS -->
-        <main class="main">
-            <table class="bills-table">
-                <thead>
-                    <tr>
-                        <th>Descrição</th>
-                        <th>Parcelas</th>
-                        <th>Vencimento</th>
-                        <th>Valor</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="billsTableBody">
-                    <!-- As contas serão carregadas via JavaScript -->
-                </tbody>
-            </table>
-        </main>
     </div>
 
     <!-- MODAL DE IMPORTAÇÃO -->

@@ -19,7 +19,7 @@ body {
     padding: 20px;
 }
 
-/* Header com título */
+/* Header com título e navegação */
 .header {
     text-align: center;
     margin-bottom: 30px;
@@ -46,6 +46,54 @@ body {
     margin-right: 15px;
     color: #667eea;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Navegação por abas */
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #6c757d;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.tab-button i {
+    font-size: 1.1rem;
+}
+
+/* Conteúdo das abas */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 /* Cards de resumo em linha única */
@@ -247,11 +295,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.filter-section, .add-section, .import-section {
+.filter-section, .add-section {
     margin-bottom: 25px;
 }
 
-.filter-section h3, .add-section h3, .import-section h3 {
+.filter-section h3, .add-section h3 {
     color: #333;
     margin-bottom: 20px;
     font-size: 1.3rem;
@@ -261,7 +309,7 @@ body {
     gap: 10px;
 }
 
-.filter-section h3 i, .add-section h3 i, .import-section h3 i {
+.filter-section h3 i, .add-section h3 i {
     color: #667eea;
     font-size: 1.2rem;
 }
@@ -481,11 +529,86 @@ body {
     font-style: italic;
 }
 
-.import-controls {
+/* Conteúdo Administrativo */
+.admin-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.admin-header h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.admin-header h2 i {
+    color: #667eea;
+}
+
+.admin-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.admin-sections {
+    display: grid;
+    gap: 25px;
+}
+
+.admin-section {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid #dee2e6;
+}
+
+.admin-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-section h3 i {
+    color: #667eea;
+    font-size: 1.2rem;
+}
+
+.admin-controls {
     display: flex;
     gap: 15px;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.admin-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.admin-info i {
+    color: #667eea;
+    margin-right: 5px;
 }
 
 .file-input {
@@ -509,6 +632,126 @@ body {
 .file-label:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+}
+
+/* Estatísticas Administrativas */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+/* Modal de Login Administrativo */
+.admin-login-modal {
+    z-index: 2000;
+}
+
+.admin-login-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-header h2 i {
+    color: #667eea;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form .form-group {
+    text-align: left;
+}
+
+.login-form .form-group label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.login-form .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.login-form .form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.login-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.login-error {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 /* Tabela de contas */
@@ -753,6 +996,11 @@ body {
         font-size: 2rem;
     }
     
+    .tab-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
     .summary-cards {
         grid-template-columns: 1fr;
     }
@@ -771,6 +1019,10 @@ body {
     }
     
     .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-stats {
         grid-template-columns: 1fr;
     }
     
@@ -830,7 +1082,8 @@ body {
 
 .summary-card,
 .controls,
-.main {
+.main,
+.admin-content {
     animation: fadeInUp 0.6s ease;
 }
 

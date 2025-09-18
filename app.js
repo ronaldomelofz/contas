@@ -1,4 +1,4 @@
-// SISTEMA DE CONTAS - VERSÃO PROFISSIONAL E FUNCIONAL COM PERSISTÊNCIA
+// SISTEMA DE CONTAS - VERSÃO PROFISSIONAL E FUNCIONAL COM PERSISTÊNCIA E ADMINISTRAÇÃO
 // Dados padrão das contas (usados apenas na primeira vez)
 const defaultBills = [
     {id: 1, company: 'FLORA', number: 'NF 130165', parcels: '3/3', date: '17/09/2025', value: 33825.36},
@@ -38,12 +38,20 @@ let bills = [];
 let bankBalance = 0.0;
 let filteredBills = [];
 let selectedFile = null;
+let isAdminLoggedIn = false;
 
 // Chaves para localStorage
 const STORAGE_KEYS = {
     BILLS: 'contas_bills',
     BANK_BALANCE: 'contas_bank_balance',
-    LAST_MODIFIED: 'contas_last_modified'
+    LAST_MODIFIED: 'contas_last_modified',
+    ADMIN_LOGGED_IN: 'contas_admin_logged_in'
+};
+
+// Credenciais administrativas (não devem aparecer no código em produção)
+const ADMIN_CREDENTIALS = {
+    username: 'ADMIN',
+    password: '1214'
 };
 
 // Função para salvar contas no localStorage
@@ -660,10 +668,209 @@ function addNewBill(event) {
     console.log('=== NOVA CONTA ADICIONADA COM SUCESSO ===');
 }
 
+// SISTEMA DE ABAS
+function switchTab(tabName) {
+    console.log('=== TROCANDO ABA ===', tabName);
+    
+    // Remover classe active de todas as abas
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Ativar aba selecionada
+    if (tabName === 'main') {
+        document.getElementById('mainTab').classList.add('active');
+        document.getElementById('mainTabContent').classList.add('active');
+    } else if (tabName === 'admin') {
+        if (isAdminLoggedIn) {
+            document.getElementById('adminTab').classList.add('active');
+            document.getElementById('adminTabContent').classList.add('active');
+            updateAdminStats();
+        } else {
+            openAdminLogin();
+        }
+    }
+    
+    console.log('=== ABA TROCADA ===');
+}
+
+// SISTEMA DE LOGIN ADMINISTRATIVO
+function openAdminLogin() {
+    console.log('=== ABRINDO LOGIN ADMINISTRATIVO ===');
+    
+    document.getElementById('adminLoginModal').style.display = 'block';
+    document.getElementById('adminUsername').focus();
+    
+    // Limpar campos
+    document.getElementById('adminUsername').value = '';
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('loginError').style.display = 'none';
+    
+    console.log('Modal de login administrativo aberto');
+}
+
+function closeAdminLogin() {
+    console.log('=== FECHANDO LOGIN ADMINISTRATIVO ===');
+    
+    document.getElementById('adminLoginModal').style.display = 'none';
+    document.getElementById('adminLoginForm').reset();
+    document.getElementById('loginError').style.display = 'none';
+    
+    console.log('Modal de login administrativo fechado');
+}
+
+function loginAdmin(event) {
+    event.preventDefault();
+    console.log('=== TENTATIVA DE LOGIN ADMINISTRATIVO ===');
+    
+    const username = document.getElementById('adminUsername').value.trim();
+    const password = document.getElementById('adminPassword').value.trim();
+    
+    console.log('Credenciais fornecidas:', { username, password: '***' });
+    
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        console.log('✅ Login administrativo bem-sucedido');
+        
+        isAdminLoggedIn = true;
+        localStorage.setItem(STORAGE_KEYS.ADMIN_LOGGED_IN, 'true');
+        
+        closeAdminLogin();
+        switchTab('admin');
+        
+        alert('Login realizado com sucesso! Bem-vindo ao painel administrativo.');
+    } else {
+        console.log('❌ Login administrativo falhou');
+        
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminPassword').focus();
+        
+        // Esconder erro após 3 segundos
+        setTimeout(() => {
+            document.getElementById('loginError').style.display = 'none';
+        }, 3000);
+    }
+}
+
+function logoutAdmin() {
+    console.log('=== LOGOUT ADMINISTRATIVO ===');
+    
+    isAdminLoggedIn = false;
+    localStorage.removeItem(STORAGE_KEYS.ADMIN_LOGGED_IN);
+    
+    // Voltar para aba principal
+    switchTab('main');
+    
+    alert('Logout realizado com sucesso!');
+    
+    console.log('Logout administrativo concluído');
+}
+
+// FUNÇÕES ADMINISTRATIVAS
+function updateAdminStats() {
+    console.log('=== ATUALIZANDO ESTATÍSTICAS ADMINISTRATIVAS ===');
+    
+    const totalBillsEl = document.getElementById('adminTotalBills');
+    const lastUpdateEl = document.getElementById('adminLastUpdate');
+    const dataSizeEl = document.getElementById('adminDataSize');
+    
+    if (totalBillsEl) {
+        totalBillsEl.textContent = bills.length;
+    }
+    
+    if (lastUpdateEl) {
+        const lastModified = localStorage.getItem(STORAGE_KEYS.LAST_MODIFIED);
+        if (lastModified) {
+            const date = new Date(lastModified);
+            lastUpdateEl.textContent = date.toLocaleString('pt-BR');
+        } else {
+            lastUpdateEl.textContent = 'Nunca';
+        }
+    }
+    
+    if (dataSizeEl) {
+        const dataSize = JSON.stringify(bills).length;
+        dataSizeEl.textContent = `${(dataSize / 1024).toFixed(2)} KB`;
+    }
+    
+    console.log('Estatísticas administrativas atualizadas');
+}
+
+function exportData() {
+    console.log('=== EXPORTANDO DADOS ===');
+    
+    const data = {
+        bills: bills,
+        bankBalance: bankBalance,
+        exportDate: new Date().toISOString(),
+        version: '1.0.0'
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `contas_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    alert('Dados exportados com sucesso!');
+    console.log('Dados exportados com sucesso');
+}
+
+function resetAllData() {
+    console.log('=== RESETANDO TODOS OS DADOS ===');
+    
+    if (confirm('ATENÇÃO: Esta ação irá resetar TODOS os dados do sistema para o estado inicial. Esta ação NÃO pode ser desfeita!\n\nTem certeza que deseja continuar?')) {
+        if (confirm('ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente!\n\nClique OK para confirmar o reset.')) {
+            // Resetar dados
+            bills = [...defaultBills];
+            filteredBills = [...bills];
+            bankBalance = 0.0;
+            
+            // Limpar localStorage
+            localStorage.removeItem(STORAGE_KEYS.BILLS);
+            localStorage.removeItem(STORAGE_KEYS.BANK_BALANCE);
+            localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
+            
+            // Salvar dados padrão
+            saveBillsToStorage();
+            localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, '0');
+            
+            // Atualizar interface
+            const balanceInput = document.getElementById('balanceInput');
+            if (balanceInput) {
+                balanceInput.value = '0';
+            }
+            
+            renderBills();
+            updateSummary();
+            updateAdminStats();
+            
+            alert('Sistema resetado com sucesso! Todos os dados foram restaurados ao estado inicial.');
+            console.log('Sistema resetado com sucesso');
+        }
+    }
+}
+
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
     console.log('DOM carregado, inicializando aplicação...');
+    
+    // Verificar se admin está logado
+    const adminLoggedIn = localStorage.getItem(STORAGE_KEYS.ADMIN_LOGGED_IN);
+    if (adminLoggedIn === 'true') {
+        isAdminLoggedIn = true;
+        console.log('Admin já estava logado');
+    }
     
     // Inicializar contas (carregar do localStorage ou usar padrão)
     initializeBills();
@@ -722,6 +929,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Event listener do formulário de adicionar conta configurado');
     }
     
+    // Event listener para o formulário de login administrativo
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    if (adminLoginForm) {
+        adminLoginForm.addEventListener('submit', loginAdmin);
+        console.log('Event listener do formulário de login administrativo configurado');
+    }
+    
     console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
 });
 
@@ -747,6 +961,13 @@ window.deleteBill = deleteBill;
 window.openAddModal = openAddModal;
 window.closeAddModal = closeAddModal;
 window.addNewBill = addNewBill;
+window.switchTab = switchTab;
+window.openAdminLogin = openAdminLogin;
+window.closeAdminLogin = closeAdminLogin;
+window.loginAdmin = loginAdmin;
+window.logoutAdmin = logoutAdmin;
+window.exportData = exportData;
+window.resetAllData = resetAllData;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
 console.log('updateBalance disponível:', typeof window.updateBalance);
@@ -755,3 +976,8 @@ console.log('clearFilter disponível:', typeof window.clearFilter);
 console.log('openAddModal disponível:', typeof window.openAddModal);
 console.log('closeAddModal disponível:', typeof window.closeAddModal);
 console.log('addNewBill disponível:', typeof window.addNewBill);
+console.log('switchTab disponível:', typeof window.switchTab);
+console.log('openAdminLogin disponível:', typeof window.openAdminLogin);
+console.log('loginAdmin disponível:', typeof window.loginAdmin);
+console.log('exportData disponível:', typeof window.exportData);
+console.log('resetAllData disponível:', typeof window.resetAllData);
