@@ -130,6 +130,8 @@ function renderBills() {
     console.log('=== RENDERIZANDO CONTAS ===');
     console.log('Total de contas:', bills.length);
     console.log('Contas filtradas:', filteredBills.length);
+    console.log('Array bills:', bills);
+    console.log('Array filteredBills:', filteredBills);
     
     const tbody = document.getElementById('billsTableBody');
     if (!tbody) {
@@ -145,7 +147,7 @@ function renderBills() {
     }
     
     filteredBills.forEach((bill, index) => {
-        console.log('Renderizando conta:', bill.company, bill.value);
+        console.log('Renderizando conta:', bill.company, bill.value, 'ID:', bill.id);
         
         const row = document.createElement('tr');
         
@@ -610,16 +612,43 @@ function addNewBill(event) {
     };
     
     console.log('Nova conta criada:', newBill);
+    console.log('Array bills antes da adição:', bills.length, 'contas');
     
     // Adicionar à lista de contas
     bills.push(newBill);
-    filteredBills = [...bills];
+    console.log('Array bills após adição:', bills.length, 'contas');
+    
+    // Atualizar contas filtradas - CORREÇÃO AQUI
+    // Verificar se há filtro ativo
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (startDate && endDate) {
+        // Se há filtro ativo, aplicar o filtro novamente
+        console.log('Aplicando filtro após adicionar nova conta');
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
+        filteredBills = bills.filter(bill => {
+            const billDate = new Date(bill.date.split('/').reverse().join('-'));
+            return billDate >= start && billDate <= end;
+        });
+    } else {
+        // Se não há filtro, mostrar todas as contas
+        console.log('Sem filtro ativo, mostrando todas as contas');
+        filteredBills = [...bills];
+    }
+    
+    console.log('Contas filtradas após adição:', filteredBills.length, 'contas');
     
     // Salvar no localStorage
     saveBillsToStorage();
     
     // Atualizar interface
+    console.log('Chamando renderBills()...');
     renderBills();
+    
+    console.log('Chamando updateSummary()...');
     updateSummary();
     
     // Fechar modal
