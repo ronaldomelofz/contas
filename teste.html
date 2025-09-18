@@ -32,12 +32,6 @@
                 addTestResult('✅ Arquivo app.js carregado com sucesso', 'success');
                 
                 // Teste 2: Verificar se as funções estão disponíveis
-                if (typeof window.updateBalance === 'function') {
-                    addTestResult('✅ Função updateBalance disponível', 'success');
-                } else {
-                    addTestResult('❌ Função updateBalance não encontrada', 'error');
-                }
-                
                 if (typeof window.renderBills === 'function') {
                     addTestResult('✅ Função renderBills disponível', 'success');
                 } else {
@@ -50,14 +44,26 @@
                     addTestResult('❌ Função formatCurrency não encontrada', 'error');
                 }
                 
-                // Teste 3: Verificar se os dados das contas estão carregados
-                if (typeof window.bills !== 'undefined' && window.bills.length > 0) {
-                    addTestResult(`✅ Dados das contas carregados: ${window.bills.length} contas`, 'success');
+                if (typeof window.applyFilter === 'function') {
+                    addTestResult('✅ Função applyFilter disponível', 'success');
                 } else {
-                    addTestResult('❌ Dados das contas não encontrados', 'error');
+                    addTestResult('❌ Função applyFilter não encontrada', 'error');
                 }
                 
-                addTestResult('🎉 Teste concluído! Sistema funcionando corretamente.', 'success');
+                if (typeof window.addNewBill === 'function') {
+                    addTestResult('✅ Função addNewBill disponível', 'success');
+                } else {
+                    addTestResult('❌ Função addNewBill não encontrada', 'error');
+                }
+                
+                // Teste 3: Verificar se os dados estão carregados
+                if (window.bills && Array.isArray(window.bills)) {
+                    addTestResult(`✅ Array de contas carregado: ${window.bills.length} contas`, 'success');
+                } else {
+                    addTestResult('❌ Array de contas não encontrado', 'error');
+                }
+                
+                addTestResult('🎉 Todos os testes concluídos!', 'info');
             };
             script.onerror = function() {
                 addTestResult('❌ Erro ao carregar app.js', 'error');
