@@ -82,7 +82,7 @@ function loadBillsFromStorage() {
 
 // Função para inicializar contas
 function initializeBills() {
-    // Sempre usar dados padrão atualizados para garantir valores corretos
+    // Limpar localStorage para forçar uso dos dados atualizados\n    localStorage.removeItem(STORAGE_KEYS.BILLS);\n    localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);\n    \n    // Limpar localStorage para forçar uso dos dados atualizados\n    localStorage.removeItem(STORAGE_KEYS.BILLS);\n    localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);\n    \n    // Sempre usar dados padrão atualizados para garantir valores corretos
     bills = [...defaultBills];
     saveBillsToStorage();
     console.log('🔄 Contas inicializadas com dados padrão');
