@@ -1,4 +1,4 @@
-// SISTEMA DE CONTAS - VERSÃO PROFISSIONAL E FUNCIONAL COM PERSISTÊNCIA E ADMINISTRAÇÃO
+// SISTEMA DE CONTAS - VERSÃO MOBILE CORRIGIDA E OTIMIZADA
 // Dados padrão das contas (usados apenas na primeira vez)
 const defaultBills = [
     {id: 1, company: 'FLORA', number: 'NF 130165', parcels: '3/3', date: '17/09/2025', value: 33825.36},
@@ -49,7 +49,7 @@ const STORAGE_KEYS = {
     ADMIN_LOGGED_IN: 'contas_admin_logged_in'
 };
 
-// Credenciais administrativas (não devem aparecer no código em produção)
+// Credenciais administrativas
 const ADMIN_CREDENTIALS = {
     username: 'ADMIN',
     password: '1214'
@@ -82,7 +82,7 @@ function loadBillsFromStorage() {
     return false;
 }
 
-// Função para inicializar contas (primeira vez ou reset)
+// Função para inicializar contas
 function initializeBills() {
     if (!loadBillsFromStorage()) {
         bills = [...defaultBills];
@@ -127,7 +127,6 @@ function getCurrentFilterPeriod() {
         };
     }
     
-    // Se não há filtro ativo, usar o período padrão
     return {
         start: '2025-09-17',
         end: '2025-09-30'
@@ -140,7 +139,7 @@ function parseDate(dateStr) {
     return new Date(year, month - 1, day);
 }
 
-// Função para renderizar contas na tabela - ORDENADAS POR DATA
+// Função para renderizar contas na tabela - VERSÃO MOBILE OTIMIZADA
 function renderBills() {
     console.log('=== RENDERIZANDO CONTAS ===');
     console.log('Total de contas:', bills.length);
@@ -158,6 +157,9 @@ function renderBills() {
     
     if (filteredBills.length === 0) {
         console.log('Nenhuma conta para renderizar');
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">Nenhuma conta encontrada</td>';
+        tbody.appendChild(row);
         return;
     }
     
@@ -165,7 +167,7 @@ function renderBills() {
     const sortedBills = [...filteredBills].sort((a, b) => {
         const dateA = parseDate(a.date);
         const dateB = parseDate(b.date);
-        return dateA - dateB; // Ordem crescente (mais antiga primeiro)
+        return dateA - dateB;
     });
     
     console.log('Contas ordenadas por data:', sortedBills.map(bill => ({ company: bill.company, date: bill.date })));
@@ -212,7 +214,6 @@ function updateSummary() {
     const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
     const totalWithBalance = totalBills + bankBalance;
     
-    // Calcular dias úteis baseado no período de filtro atual
     const filterPeriod = getCurrentFilterPeriod();
     const workingDays = calculateWorkingDays(filterPeriod.start, filterPeriod.end);
     const dailyAmount = workingDays > 0 ? totalWithBalance / workingDays : 0;
@@ -281,7 +282,6 @@ function updateSummary() {
         console.error('Elemento balanceDisplay não encontrado!');
     }
     
-    // Atualizar cor do saldo bancário
     if (bankBalanceEl) {
         bankBalanceEl.className = 'card-value';
         if (bankBalance > 0) {
@@ -296,7 +296,7 @@ function updateSummary() {
     console.log('=== RESUMO ATUALIZADO ===');
 }
 
-// Função para atualizar saldo bancário - VERSÃO PROFISSIONAL E FUNCIONAL
+// Função para atualizar saldo bancário
 function updateBalance() {
     console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
     
@@ -317,7 +317,6 @@ function updateBalance() {
         return;
     }
     
-    // Converter vírgula para ponto e processar
     const balance = parseFloat(inputValue.replace(',', '.')) || 0;
     console.log('Valor processado:', balance);
     
@@ -329,14 +328,11 @@ function updateBalance() {
     bankBalance = balance;
     console.log('Saldo bancário definido como:', bankBalance);
     
-    // Salvar no localStorage
     localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, balance.toString());
     console.log('Saldo bancário salvo no localStorage:', balance);
     
-    // Atualizar resumo completo (isso já atualiza todos os campos)
     updateSummary();
     
-    // Mostrar feedback visual
     const button = document.querySelector('button[onclick="updateBalance()"]');
     if (button) {
         const originalText = button.innerHTML;
@@ -352,7 +348,7 @@ function updateBalance() {
     console.log('=== SALDO BANCÁRIO ATUALIZADO COM SUCESSO ===');
 }
 
-// Função para aplicar filtro de datas
+// Função para aplicar filtro de datas - VERSÃO MOBILE CORRIGIDA
 function applyFilter() {
     console.log('=== APLICANDO FILTRO ===');
     
@@ -372,13 +368,17 @@ function applyFilter() {
         });
         
         console.log('Contas filtradas:', filteredBills.length);
+        console.log('Contas filtradas detalhes:', filteredBills.map(b => ({ company: b.company, date: b.date })));
     } else {
         filteredBills = [...bills];
         console.log('Filtro limpo, mostrando todas as contas');
     }
     
-    renderBills();
-    updateSummary();
+    // FORÇAR RENDERIZAÇÃO EM MOBILE
+    setTimeout(() => {
+        renderBills();
+        updateSummary();
+    }, 100);
     
     console.log('=== FILTRO APLICADO ===');
 }
@@ -391,8 +391,10 @@ function clearFilter() {
     document.getElementById('endDate').value = '2025-09-30';
     filteredBills = [...bills];
     
-    renderBills();
-    updateSummary();
+    setTimeout(() => {
+        renderBills();
+        updateSummary();
+    }, 100);
     
     console.log('=== FILTRO LIMPO ===');
 }
@@ -430,7 +432,7 @@ function confirmImport() {
             console.log('Linhas encontradas:', lines.length);
             
             lines.forEach((line, index) => {
-                if (line.trim() && index > 0) { // Pular cabeçalho
+                if (line.trim() && index > 0) {
                     const parts = line.split('\t');
                     if (parts.length >= 4) {
                         try {
@@ -465,7 +467,7 @@ function confirmImport() {
             if (newBills.length > 0) {
                 bills = newBills;
                 filteredBills = [...bills];
-                saveBillsToStorage(); // Salvar no localStorage
+                saveBillsToStorage();
                 renderBills();
                 updateSummary();
                 alert(`Importadas ${newBills.length} contas com sucesso!`);
@@ -518,7 +520,7 @@ function editBill(id) {
     const bill = bills.find(b => b.id === id);
     if (bill) {
         const newCompany = prompt('Empresa:', bill.company);
-        if (newCompany === null) return; // Usuário cancelou
+        if (newCompany === null) return;
         
         const newNumber = prompt('Número:', bill.number);
         if (newNumber === null) return;
@@ -539,8 +541,22 @@ function editBill(id) {
             bill.date = newDate;
             bill.value = parseFloat(newValue);
             
-            // Salvar alterações no localStorage
             saveBillsToStorage();
+            
+            // Reaplicar filtro se ativo
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                filteredBills = bills.filter(bill => {
+                    const billDate = new Date(bill.date.split('/').reverse().join('-'));
+                    return billDate >= start && billDate <= end;
+                });
+            } else {
+                filteredBills = [...bills];
+            }
             
             renderBills();
             updateSummary();
@@ -557,10 +573,23 @@ function deleteBill(id) {
     if (confirm('Tem certeza que deseja excluir esta conta?')) {
         const originalLength = bills.length;
         bills = bills.filter(bill => bill.id !== id);
-        filteredBills = [...bills];
+        
+        // Reaplicar filtro se ativo
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            filteredBills = bills.filter(bill => {
+                const billDate = new Date(bill.date.split('/').reverse().join('-'));
+                return billDate >= start && billDate <= end;
+            });
+        } else {
+            filteredBills = [...bills];
+        }
         
         if (bills.length < originalLength) {
-            // Salvar alterações no localStorage
             saveBillsToStorage();
             
             renderBills();
@@ -577,15 +606,12 @@ function deleteBill(id) {
 function openAddModal() {
     console.log('=== ABRINDO MODAL DE ADICIONAR CONTA ===');
     
-    // Limpar formulário
     document.getElementById('addBillForm').reset();
     
-    // Definir data padrão (hoje)
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
     document.getElementById('addDate').value = todayStr;
     
-    // Mostrar modal
     document.getElementById('addModal').style.display = 'block';
     
     console.log('Modal de adicionar conta aberto');
@@ -604,7 +630,6 @@ function addNewBill(event) {
     event.preventDefault();
     console.log('=== ADICIONANDO NOVA CONTA ===');
     
-    // Obter valores do formulário
     const company = document.getElementById('addCompany').value.trim();
     const number = document.getElementById('addNumber').value.trim();
     const parcels = document.getElementById('addParcels').value.trim();
@@ -613,7 +638,6 @@ function addNewBill(event) {
     
     console.log('Dados do formulário:', { company, number, parcels, date, value });
     
-    // Validar campos obrigatórios
     if (!company) {
         alert('Por favor, informe a empresa!');
         document.getElementById('addCompany').focus();
@@ -638,14 +662,11 @@ function addNewBill(event) {
         return;
     }
     
-    // Converter data para formato DD/MM/AAAA
     const dateObj = new Date(date);
     const formattedDate = dateObj.toLocaleDateString('pt-BR');
     
-    // Gerar novo ID
     const newId = Math.max(...bills.map(b => b.id), 0) + 1;
     
-    // Criar nova conta
     const newBill = {
         id: newId,
         company: company,
@@ -658,17 +679,14 @@ function addNewBill(event) {
     console.log('Nova conta criada:', newBill);
     console.log('Array bills antes da adição:', bills.length, 'contas');
     
-    // Adicionar à lista de contas
     bills.push(newBill);
     console.log('Array bills após adição:', bills.length, 'contas');
     
-    // Atualizar contas filtradas - CORREÇÃO AQUI
-    // Verificar se há filtro ativo
+    // Reaplicar filtro se ativo
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     
     if (startDate && endDate) {
-        // Se há filtro ativo, aplicar o filtro novamente
         console.log('Aplicando filtro após adicionar nova conta');
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -678,27 +696,22 @@ function addNewBill(event) {
             return billDate >= start && billDate <= end;
         });
     } else {
-        // Se não há filtro, mostrar todas as contas
         console.log('Sem filtro ativo, mostrando todas as contas');
         filteredBills = [...bills];
     }
     
     console.log('Contas filtradas após adição:', filteredBills.length, 'contas');
     
-    // Salvar no localStorage
     saveBillsToStorage();
     
-    // Atualizar interface
     console.log('Chamando renderBills()...');
     renderBills();
     
     console.log('Chamando updateSummary()...');
     updateSummary();
     
-    // Fechar modal
     closeAddModal();
     
-    // Mostrar feedback
     alert(`Conta "${company}" adicionada com sucesso!`);
     
     console.log('=== NOVA CONTA ADICIONADA COM SUCESSO ===');
@@ -708,7 +721,6 @@ function addNewBill(event) {
 function switchTab(tabName) {
     console.log('=== TROCANDO ABA ===', tabName);
     
-    // Remover classe active de todas as abas
     document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -717,7 +729,6 @@ function switchTab(tabName) {
         content.classList.remove('active');
     });
     
-    // Ativar aba selecionada
     if (tabName === 'main') {
         document.getElementById('mainTab').classList.add('active');
         document.getElementById('mainTabContent').classList.add('active');
@@ -741,7 +752,6 @@ function openAdminLogin() {
     document.getElementById('adminLoginModal').style.display = 'block';
     document.getElementById('adminUsername').focus();
     
-    // Limpar campos
     document.getElementById('adminUsername').value = '';
     document.getElementById('adminPassword').value = '';
     document.getElementById('loginError').style.display = 'none';
@@ -785,7 +795,6 @@ function loginAdmin(event) {
         document.getElementById('adminPassword').value = '';
         document.getElementById('adminPassword').focus();
         
-        // Esconder erro após 3 segundos
         setTimeout(() => {
             document.getElementById('loginError').style.display = 'none';
         }, 3000);
@@ -798,7 +807,6 @@ function logoutAdmin() {
     isAdminLoggedIn = false;
     localStorage.removeItem(STORAGE_KEYS.ADMIN_LOGGED_IN);
     
-    // Voltar para aba principal
     switchTab('main');
     
     alert('Logout realizado com sucesso!');
@@ -866,21 +874,17 @@ function resetAllData() {
     
     if (confirm('ATENÇÃO: Esta ação irá resetar TODOS os dados do sistema para o estado inicial. Esta ação NÃO pode ser desfeita!\n\nTem certeza que deseja continuar?')) {
         if (confirm('ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente!\n\nClique OK para confirmar o reset.')) {
-            // Resetar dados
             bills = [...defaultBills];
             filteredBills = [...bills];
             bankBalance = 0.0;
             
-            // Limpar localStorage
             localStorage.removeItem(STORAGE_KEYS.BILLS);
             localStorage.removeItem(STORAGE_KEYS.BANK_BALANCE);
             localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
             
-            // Salvar dados padrão
             saveBillsToStorage();
             localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, '0');
             
-            // Atualizar interface
             const balanceInput = document.getElementById('balanceInput');
             if (balanceInput) {
                 balanceInput.value = '0';
@@ -893,6 +897,33 @@ function resetAllData() {
             alert('Sistema resetado com sucesso! Todos os dados foram restaurados ao estado inicial.');
             console.log('Sistema resetado com sucesso');
         }
+    }
+}
+
+// Função para forçar inicialização em mobile
+function forceMobileInit() {
+    console.log('=== FORÇANDO INICIALIZAÇÃO MOBILE ===');
+    
+    const elements = [
+        'totalBills', 'bankBalanceDisplay', 'totalGeneral', 'dailyAmount',
+        'workingDays', 'filteredCount', 'balanceDisplay', 'billsTableBody'
+    ];
+    
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            console.log(`✅ Elemento ${id} encontrado`);
+        } else {
+            console.error(`❌ Elemento ${id} NÃO encontrado!`);
+        }
+    });
+    
+    if (bills.length > 0) {
+        renderBills();
+        updateSummary();
+        console.log('✅ Renderização forçada concluída');
+    } else {
+        console.log('⚠️ Nenhuma conta para renderizar');
     }
 }
 
@@ -909,51 +940,19 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Função para forçar inicialização em mobile
-function forceMobileInit() {
-    console.log('=== FORÇANDO INICIALIZAÇÃO MOBILE ===');
-    
-    // Verificar se os elementos existem
-    const elements = [
-        'totalBills', 'bankBalanceDisplay', 'totalGeneral', 'dailyAmount',
-        'workingDays', 'filteredCount', 'balanceDisplay', 'billsTableBody'
-    ];
-    
-    elements.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            console.log(`✅ Elemento ${id} encontrado`);
-        } else {
-            console.error(`❌ Elemento ${id} NÃO encontrado!`);
-        }
-    });
-    
-    // Forçar renderização
-    if (bills.length > 0) {
-        renderBills();
-        updateSummary();
-        console.log('✅ Renderização forçada concluída');
-    } else {
-        console.log('⚠️ Nenhuma conta para renderizar');
-    }
-}
-
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
     console.log('DOM carregado, inicializando aplicação...');
     
-    // Verificar se admin está logado
     const adminLoggedIn = localStorage.getItem(STORAGE_KEYS.ADMIN_LOGGED_IN);
     if (adminLoggedIn === 'true') {
         isAdminLoggedIn = true;
         console.log('Admin já estava logado');
     }
     
-    // Inicializar contas (carregar do localStorage ou usar padrão)
     initializeBills();
     
-    // Carregar saldo bancário do localStorage
     const savedBalance = localStorage.getItem(STORAGE_KEYS.BANK_BALANCE);
     if (savedBalance !== null) {
         bankBalance = parseFloat(savedBalance);
@@ -964,18 +963,15 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Saldo bancário carregado do localStorage:', bankBalance);
     }
     
-    // Garantir que as contas filtradas estejam corretas
     filteredBills = [...bills];
     console.log('Contas filtradas inicializadas:', filteredBills.length);
     
-    // Renderizar contas e atualizar resumo
     console.log('Chamando renderBills()...');
     renderBills();
     
     console.log('Chamando updateSummary()...');
     updateSummary();
     
-    // Adicionar event listeners
     const balanceInput = document.getElementById('balanceInput');
     if (balanceInput) {
         balanceInput.addEventListener('keypress', function(e) {
@@ -1000,14 +996,12 @@ document.addEventListener('DOMContentLoaded', function() {
         endDate.addEventListener('change', applyFilter);
     }
     
-    // Event listener para o formulário de adicionar conta
     const addBillForm = document.getElementById('addBillForm');
     if (addBillForm) {
         addBillForm.addEventListener('submit', addNewBill);
         console.log('Event listener do formulário de adicionar conta configurado');
     }
     
-    // Event listener para o formulário de login administrativo
     const adminLoginForm = document.getElementById('adminLoginForm');
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', loginAdmin);
