@@ -247,11 +247,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.filter-section, .import-section {
+.filter-section, .add-section, .import-section {
     margin-bottom: 25px;
 }
 
-.filter-section h3, .import-section h3 {
+.filter-section h3, .add-section h3, .import-section h3 {
     color: #333;
     margin-bottom: 20px;
     font-size: 1.3rem;
@@ -261,7 +261,7 @@ body {
     gap: 10px;
 }
 
-.filter-section h3 i, .import-section h3 i {
+.filter-section h3 i, .add-section h3 i, .import-section h3 i {
     color: #667eea;
     font-size: 1.2rem;
 }
@@ -460,6 +460,27 @@ body {
     text-align: center;
 }
 
+/* Seção de Adicionar Conta */
+.add-section {
+    background: linear-gradient(135deg, #e8f5e8, #d4edda);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #2ecc71;
+}
+
+.add-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.add-info {
+    color: #155724;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 .import-controls {
     display: flex;
     gap: 15px;
@@ -617,6 +638,81 @@ body {
     animation: modalSlideIn 0.3s ease;
 }
 
+/* Modal de Adicionar Conta */
+.add-modal-content {
+    max-width: 600px;
+    text-align: left;
+}
+
+.add-modal-content h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.add-modal-content h3 i {
+    color: #2ecc71;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    padding: 12px 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2ecc71;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+}
+
+.form-group input:invalid {
+    border-color: #e74c3c;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 @keyframes modalSlideIn {
     from {
         opacity: 0;
@@ -672,6 +768,10 @@ body {
     .balance-controls {
         grid-template-columns: 1fr;
         gap: 10px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
     }
     
     .bills-table {

@@ -527,6 +527,110 @@ function deleteBill(id) {
     }
 }
 
+// Funções para adicionar nova conta
+function openAddModal() {
+    console.log('=== ABRINDO MODAL DE ADICIONAR CONTA ===');
+    
+    // Limpar formulário
+    document.getElementById('addBillForm').reset();
+    
+    // Definir data padrão (hoje)
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    document.getElementById('addDate').value = todayStr;
+    
+    // Mostrar modal
+    document.getElementById('addModal').style.display = 'block';
+    
+    console.log('Modal de adicionar conta aberto');
+}
+
+function closeAddModal() {
+    console.log('=== FECHANDO MODAL DE ADICIONAR CONTA ===');
+    
+    document.getElementById('addModal').style.display = 'none';
+    document.getElementById('addBillForm').reset();
+    
+    console.log('Modal de adicionar conta fechado');
+}
+
+function addNewBill(event) {
+    event.preventDefault();
+    console.log('=== ADICIONANDO NOVA CONTA ===');
+    
+    // Obter valores do formulário
+    const company = document.getElementById('addCompany').value.trim();
+    const number = document.getElementById('addNumber').value.trim();
+    const parcels = document.getElementById('addParcels').value.trim();
+    const date = document.getElementById('addDate').value;
+    const value = parseFloat(document.getElementById('addValue').value);
+    
+    console.log('Dados do formulário:', { company, number, parcels, date, value });
+    
+    // Validar campos obrigatórios
+    if (!company) {
+        alert('Por favor, informe a empresa!');
+        document.getElementById('addCompany').focus();
+        return;
+    }
+    
+    if (!parcels) {
+        alert('Por favor, informe as parcelas!');
+        document.getElementById('addParcels').focus();
+        return;
+    }
+    
+    if (!date) {
+        alert('Por favor, informe a data de vencimento!');
+        document.getElementById('addDate').focus();
+        return;
+    }
+    
+    if (!value || isNaN(value) || value <= 0) {
+        alert('Por favor, informe um valor válido!');
+        document.getElementById('addValue').focus();
+        return;
+    }
+    
+    // Converter data para formato DD/MM/AAAA
+    const dateObj = new Date(date);
+    const formattedDate = dateObj.toLocaleDateString('pt-BR');
+    
+    // Gerar novo ID
+    const newId = Math.max(...bills.map(b => b.id), 0) + 1;
+    
+    // Criar nova conta
+    const newBill = {
+        id: newId,
+        company: company,
+        number: number,
+        parcels: parcels,
+        date: formattedDate,
+        value: value
+    };
+    
+    console.log('Nova conta criada:', newBill);
+    
+    // Adicionar à lista de contas
+    bills.push(newBill);
+    filteredBills = [...bills];
+    
+    // Salvar no localStorage
+    saveBillsToStorage();
+    
+    // Atualizar interface
+    renderBills();
+    updateSummary();
+    
+    // Fechar modal
+    closeAddModal();
+    
+    // Mostrar feedback
+    alert(`Conta "${company}" adicionada com sucesso!`);
+    
+    console.log('=== NOVA CONTA ADICIONADA COM SUCESSO ===');
+}
+
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
@@ -582,6 +686,13 @@ document.addEventListener('DOMContentLoaded', function() {
         endDate.addEventListener('change', applyFilter);
     }
     
+    // Event listener para o formulário de adicionar conta
+    const addBillForm = document.getElementById('addBillForm');
+    if (addBillForm) {
+        addBillForm.addEventListener('submit', addNewBill);
+        console.log('Event listener do formulário de adicionar conta configurado');
+    }
+    
     console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
 });
 
@@ -604,8 +715,14 @@ window.downloadTemplate = downloadTemplate;
 window.closeModal = closeModal;
 window.editBill = editBill;
 window.deleteBill = deleteBill;
+window.openAddModal = openAddModal;
+window.closeAddModal = closeAddModal;
+window.addNewBill = addNewBill;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
 console.log('updateBalance disponível:', typeof window.updateBalance);
 console.log('applyFilter disponível:', typeof window.applyFilter);
 console.log('clearFilter disponível:', typeof window.clearFilter);
+console.log('openAddModal disponível:', typeof window.openAddModal);
+console.log('closeAddModal disponível:', typeof window.closeAddModal);
+console.log('addNewBill disponível:', typeof window.addNewBill);
