@@ -235,30 +235,50 @@ function updateSummary() {
     if (totalBillsEl) {
         totalBillsEl.textContent = formatCurrency(totalBills);
         console.log('Total contas atualizado:', formatCurrency(totalBills));
+    } else {
+        console.error('Elemento totalBills não encontrado!');
     }
+    
     if (bankBalanceEl) {
         bankBalanceEl.textContent = formatCurrency(bankBalance);
         console.log('Saldo bancário atualizado:', formatCurrency(bankBalance));
+    } else {
+        console.error('Elemento bankBalanceDisplay não encontrado!');
     }
+    
     if (totalGeneralEl) {
         totalGeneralEl.textContent = formatCurrency(totalWithBalance);
         console.log('Total geral atualizado:', formatCurrency(totalWithBalance));
+    } else {
+        console.error('Elemento totalGeneral não encontrado!');
     }
+    
     if (dailyAmountEl) {
         dailyAmountEl.textContent = formatCurrency(dailyAmount);
         console.log('Valor por dia atualizado:', formatCurrency(dailyAmount));
+    } else {
+        console.error('Elemento dailyAmount não encontrado!');
     }
+    
     if (workingDaysEl) {
         workingDaysEl.textContent = workingDays.toString();
         console.log('Dias úteis atualizado:', workingDays);
+    } else {
+        console.error('Elemento workingDays não encontrado!');
     }
+    
     if (filteredCountEl) {
         filteredCountEl.textContent = `${filteredBills.length} contas`;
         console.log('Contador de contas atualizado:', filteredBills.length);
+    } else {
+        console.error('Elemento filteredCount não encontrado!');
     }
+    
     if (balanceDisplayEl) {
         balanceDisplayEl.textContent = formatCurrency(bankBalance);
         console.log('Display do saldo atualizado:', formatCurrency(bankBalance));
+    } else {
+        console.error('Elemento balanceDisplay não encontrado!');
     }
     
     // Atualizar cor do saldo bancário
@@ -889,6 +909,35 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Função para forçar inicialização em mobile
+function forceMobileInit() {
+    console.log('=== FORÇANDO INICIALIZAÇÃO MOBILE ===');
+    
+    // Verificar se os elementos existem
+    const elements = [
+        'totalBills', 'bankBalanceDisplay', 'totalGeneral', 'dailyAmount',
+        'workingDays', 'filteredCount', 'balanceDisplay', 'billsTableBody'
+    ];
+    
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            console.log(`✅ Elemento ${id} encontrado`);
+        } else {
+            console.error(`❌ Elemento ${id} NÃO encontrado!`);
+        }
+    });
+    
+    // Forçar renderização
+    if (bills.length > 0) {
+        renderBills();
+        updateSummary();
+        console.log('✅ Renderização forçada concluída');
+    } else {
+        console.log('⚠️ Nenhuma conta para renderizar');
+    }
+}
+
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
@@ -968,14 +1017,21 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
 });
 
-// Forçar renderização após 1 segundo (fallback)
+// Múltiplos fallbacks para garantir funcionamento em mobile
 setTimeout(function() {
-    console.log('=== FALLBACK: FORÇANDO RENDERIZAÇÃO ===');
-    if (document.getElementById('billsTableBody')) {
-        renderBills();
-        updateSummary();
-    }
+    console.log('=== FALLBACK 1: FORÇANDO RENDERIZAÇÃO ===');
+    forceMobileInit();
+}, 500);
+
+setTimeout(function() {
+    console.log('=== FALLBACK 2: FORÇANDO RENDERIZAÇÃO ===');
+    forceMobileInit();
 }, 1000);
+
+setTimeout(function() {
+    console.log('=== FALLBACK 3: FORÇANDO RENDERIZAÇÃO ===');
+    forceMobileInit();
+}, 2000);
 
 // Debug: Verificar se as funções estão disponíveis globalmente
 window.updateBalance = updateBalance;
@@ -997,6 +1053,7 @@ window.loginAdmin = loginAdmin;
 window.logoutAdmin = logoutAdmin;
 window.exportData = exportData;
 window.resetAllData = resetAllData;
+window.forceMobileInit = forceMobileInit;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
 console.log('updateBalance disponível:', typeof window.updateBalance);
@@ -1010,3 +1067,4 @@ console.log('openAdminLogin disponível:', typeof window.openAdminLogin);
 console.log('loginAdmin disponível:', typeof window.loginAdmin);
 console.log('exportData disponível:', typeof window.exportData);
 console.log('resetAllData disponível:', typeof window.resetAllData);
+console.log('forceMobileInit disponível:', typeof window.forceMobileInit);

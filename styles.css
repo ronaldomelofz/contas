@@ -1014,7 +1014,7 @@ body {
     display: none;
 }
 
-/* RESPONSIVIDADE MOBILE - VERSÃO PROFISSIONAL */
+/* RESPONSIVIDADE MOBILE - VERSÃO CORRIGIDA */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -1054,6 +1054,9 @@ body {
     .summary-card {
         padding: 20px;
         border-radius: 15px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .summary-card h3 {
@@ -1074,6 +1077,9 @@ body {
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 15px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .balance-section h3 {
@@ -1114,6 +1120,9 @@ body {
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 15px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .date-filters h3 {
@@ -1145,6 +1154,9 @@ body {
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 15px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .add-bill-section h3 {
@@ -1164,6 +1176,9 @@ body {
         margin-bottom: 20px;
         border-radius: 15px;
         overflow-x: auto;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .bills-section h3 {
