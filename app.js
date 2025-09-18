@@ -133,7 +133,13 @@ function getCurrentFilterPeriod() {
     };
 }
 
-// Função para renderizar contas na tabela
+// Função para converter data DD/MM/AAAA para objeto Date
+function parseDate(dateStr) {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(year, month - 1, day);
+}
+
+// Função para renderizar contas na tabela - ORDENADAS POR DATA
 function renderBills() {
     console.log('=== RENDERIZANDO CONTAS ===');
     console.log('Total de contas:', bills.length);
@@ -154,8 +160,17 @@ function renderBills() {
         return;
     }
     
-    filteredBills.forEach((bill, index) => {
-        console.log('Renderizando conta:', bill.company, bill.value, 'ID:', bill.id);
+    // ORDENAR CONTAS POR DATA EM ORDEM CRESCENTE
+    const sortedBills = [...filteredBills].sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateA - dateB; // Ordem crescente (mais antiga primeiro)
+    });
+    
+    console.log('Contas ordenadas por data:', sortedBills.map(bill => ({ company: bill.company, date: bill.date })));
+    
+    sortedBills.forEach((bill, index) => {
+        console.log('Renderizando conta:', bill.company, bill.value, 'ID:', bill.id, 'Data:', bill.date);
         
         const row = document.createElement('tr');
         
