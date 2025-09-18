@@ -247,11 +247,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.filter-section, .import-section {
+.filter-section, .import-section, .reset-section {
     margin-bottom: 25px;
 }
 
-.filter-section h3, .import-section h3 {
+.filter-section h3, .import-section h3, .reset-section h3 {
     color: #333;
     margin-bottom: 20px;
     font-size: 1.3rem;
@@ -261,7 +261,7 @@ body {
     gap: 10px;
 }
 
-.filter-section h3 i, .import-section h3 i {
+.filter-section h3 i, .import-section h3 i, .reset-section h3 i {
     color: #667eea;
     font-size: 1.2rem;
 }
@@ -488,6 +488,27 @@ body {
 .file-label:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+}
+
+/* Seção de Reset */
+.reset-section {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #f39c12;
+}
+
+.reset-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.reset-info {
+    color: #856404;
+    font-size: 0.9rem;
+    font-style: italic;
 }
 
 /* Tabela de contas */

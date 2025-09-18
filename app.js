@@ -1,6 +1,6 @@
-// SISTEMA DE CONTAS - VERSÃO PROFISSIONAL E FUNCIONAL
-// Dados das contas
-let bills = [
+// SISTEMA DE CONTAS - VERSÃO PROFISSIONAL E FUNCIONAL COM PERSISTÊNCIA
+// Dados padrão das contas (usados apenas na primeira vez)
+const defaultBills = [
     {id: 1, company: 'FLORA', number: 'NF 130165', parcels: '3/3', date: '17/09/2025', value: 33825.36},
     {id: 2, company: 'ROMETAL', number: 'NF 160349', parcels: '1/3', date: '18/09/2025', value: 6279.72},
     {id: 3, company: 'ROMETAL', number: 'NF 251614', parcels: '1/3', date: '18/09/2025', value: 2848.22},
@@ -33,9 +33,55 @@ let bills = [
     {id: 30, company: 'TEGUS', number: 'NF 26670', parcels: '2/3', date: '30/09/2025', value: 2588.34}
 ];
 
+// Variáveis globais
+let bills = [];
 let bankBalance = 0.0;
-let filteredBills = [...bills];
+let filteredBills = [];
 let selectedFile = null;
+
+// Chaves para localStorage
+const STORAGE_KEYS = {
+    BILLS: 'contas_bills',
+    BANK_BALANCE: 'contas_bank_balance',
+    LAST_MODIFIED: 'contas_last_modified'
+};
+
+// Função para salvar contas no localStorage
+function saveBillsToStorage() {
+    try {
+        localStorage.setItem(STORAGE_KEYS.BILLS, JSON.stringify(bills));
+        localStorage.setItem(STORAGE_KEYS.LAST_MODIFIED, new Date().toISOString());
+        console.log('✅ Contas salvas no localStorage:', bills.length, 'contas');
+    } catch (error) {
+        console.error('❌ Erro ao salvar contas:', error);
+        alert('Erro ao salvar as alterações. Tente novamente.');
+    }
+}
+
+// Função para carregar contas do localStorage
+function loadBillsFromStorage() {
+    try {
+        const savedBills = localStorage.getItem(STORAGE_KEYS.BILLS);
+        if (savedBills) {
+            bills = JSON.parse(savedBills);
+            console.log('✅ Contas carregadas do localStorage:', bills.length, 'contas');
+            return true;
+        }
+    } catch (error) {
+        console.error('❌ Erro ao carregar contas:', error);
+    }
+    return false;
+}
+
+// Função para inicializar contas (primeira vez ou reset)
+function initializeBills() {
+    if (!loadBillsFromStorage()) {
+        bills = [...defaultBills];
+        saveBillsToStorage();
+        console.log('🔄 Contas inicializadas com dados padrão');
+    }
+    filteredBills = [...bills];
+}
 
 // Função para formatar moeda
 function formatCurrency(value) {
@@ -237,12 +283,12 @@ function updateBalance() {
     bankBalance = balance;
     console.log('Saldo bancário definido como:', bankBalance);
     
+    // Salvar no localStorage
+    localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, balance.toString());
+    console.log('Saldo bancário salvo no localStorage:', balance);
+    
     // Atualizar resumo completo (isso já atualiza todos os campos)
     updateSummary();
-    
-    // Salvar no localStorage
-    localStorage.setItem('bankBalance', balance.toString());
-    console.log('Saldo bancário salvo no localStorage:', balance);
     
     // Mostrar feedback visual
     const button = document.querySelector('button[onclick="updateBalance()"]');
@@ -373,6 +419,7 @@ function confirmImport() {
             if (newBills.length > 0) {
                 bills = newBills;
                 filteredBills = [...bills];
+                saveBillsToStorage(); // Salvar no localStorage
                 renderBills();
                 updateSummary();
                 alert(`Importadas ${newBills.length} contas com sucesso!`);
@@ -446,6 +493,9 @@ function editBill(id) {
             bill.date = newDate;
             bill.value = parseFloat(newValue);
             
+            // Salvar alterações no localStorage
+            saveBillsToStorage();
+            
             renderBills();
             updateSummary();
             
@@ -464,6 +514,9 @@ function deleteBill(id) {
         filteredBills = [...bills];
         
         if (bills.length < originalLength) {
+            // Salvar alterações no localStorage
+            saveBillsToStorage();
+            
             renderBills();
             updateSummary();
             console.log('Conta excluída com sucesso');
@@ -474,13 +527,46 @@ function deleteBill(id) {
     }
 }
 
+// Função para resetar dados (voltar ao padrão)
+function resetData() {
+    if (confirm('Tem certeza que deseja resetar todos os dados para o padrão? Esta ação não pode ser desfeita!')) {
+        bills = [...defaultBills];
+        filteredBills = [...bills];
+        bankBalance = 0.0;
+        
+        // Limpar localStorage
+        localStorage.removeItem(STORAGE_KEYS.BILLS);
+        localStorage.removeItem(STORAGE_KEYS.BANK_BALANCE);
+        localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
+        
+        // Salvar dados padrão
+        saveBillsToStorage();
+        localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, '0');
+        
+        // Atualizar interface
+        const balanceInput = document.getElementById('balanceInput');
+        if (balanceInput) {
+            balanceInput.value = '0';
+        }
+        
+        renderBills();
+        updateSummary();
+        
+        alert('Dados resetados com sucesso!');
+        console.log('Dados resetados para o padrão');
+    }
+}
+
 // Inicializar aplicação quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INICIANDO APLICAÇÃO ===');
     console.log('DOM carregado, inicializando aplicação...');
     
+    // Inicializar contas (carregar do localStorage ou usar padrão)
+    initializeBills();
+    
     // Carregar saldo bancário do localStorage
-    const savedBalance = localStorage.getItem('bankBalance');
+    const savedBalance = localStorage.getItem(STORAGE_KEYS.BANK_BALANCE);
     if (savedBalance !== null) {
         bankBalance = parseFloat(savedBalance);
         const balanceInput = document.getElementById('balanceInput');
@@ -548,8 +634,10 @@ window.downloadTemplate = downloadTemplate;
 window.closeModal = closeModal;
 window.editBill = editBill;
 window.deleteBill = deleteBill;
+window.resetData = resetData;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
 console.log('updateBalance disponível:', typeof window.updateBalance);
 console.log('applyFilter disponível:', typeof window.applyFilter);
 console.log('clearFilter disponível:', typeof window.clearFilter);
+console.log('resetData disponível:', typeof window.resetData);
