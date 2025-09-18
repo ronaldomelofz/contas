@@ -103,25 +103,6 @@ function renderBills() {
         
         const row = document.createElement('tr');
         
-        const today = new Date();
-        const billDate = new Date(bill.date.split('/').reverse().join('-'));
-        const isOverdue = billDate < today;
-        const isToday = billDate.toDateString() === today.toDateString();
-        
-        let statusClass = 'bill-status';
-        let statusText = 'A pagar';
-        
-        if (isOverdue) {
-            statusClass += ' bill-overdue';
-            statusText = 'Vencida';
-        } else if (isToday) {
-            statusClass += ' bill-today';
-            statusText = 'Hoje';
-        } else {
-            statusClass += ' bill-to-pay';
-            statusText = 'A pagar';
-        }
-        
         row.innerHTML = `
             <td>
                 <div class="bill-company">${bill.company}</div>
@@ -131,9 +112,6 @@ function renderBills() {
                 <span class="bill-parcels">${bill.parcels}</span>
             </td>
             <td class="bill-date">${bill.date}</td>
-            <td>
-                <span class="${statusClass}">${statusText}</span>
-            </td>
             <td>
                 <div class="bill-value">${formatCurrency(bill.value)}</div>
             </td>
