@@ -282,7 +282,7 @@ function parseDate(dateStr) {
 }
 
 // Função para editar conta
-function editBill(id) {
+function editBill(id) {\n    console.log("🔍 EDITANDO CONTA - ID:", id);\n    console.log("🔍 Modal editModal existe?", document.getElementById("editModal"));
     console.log('=== EDITANDO CONTA ===', id);
     
     const bill = bills.find(b => b.id === id);
