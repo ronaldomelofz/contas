@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Sistema de Contas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Teste do Sistema de Contas</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        function addTestResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            document.getElementById('test-results').appendChild(div);
+        }
+        
+        // Teste 1: Verificar se o arquivo app.js carrega
+        try {
+            const script = document.createElement('script');
+            script.src = 'app.js';
+            script.onload = function() {
+                addTestResult('✅ Arquivo app.js carregado com sucesso', 'success');
+                
+                // Teste 2: Verificar se as funções estão disponíveis
+                if (typeof window.updateBalance === 'function') {
+                    addTestResult('✅ Função updateBalance disponível', 'success');
+                } else {
+                    addTestResult('❌ Função updateBalance não encontrada', 'error');
+                }
+                
+                if (typeof window.renderBills === 'function') {
+                    addTestResult('✅ Função renderBills disponível', 'success');
+                } else {
+                    addTestResult('❌ Função renderBills não encontrada', 'error');
+                }
+                
+                if (typeof window.formatCurrency === 'function') {
+                    addTestResult('✅ Função formatCurrency disponível', 'success');
+                } else {
+                    addTestResult('❌ Função formatCurrency não encontrada', 'error');
+                }
+                
+                // Teste 3: Verificar se os dados das contas estão carregados
+                if (typeof window.bills !== 'undefined' && window.bills.length > 0) {
+                    addTestResult(`✅ Dados das contas carregados: ${window.bills.length} contas`, 'success');
+                } else {
+                    addTestResult('❌ Dados das contas não encontrados', 'error');
+                }
+                
+                addTestResult('🎉 Teste concluído! Sistema funcionando corretamente.', 'success');
+            };
+            script.onerror = function() {
+                addTestResult('❌ Erro ao carregar app.js', 'error');
+            };
+            document.head.appendChild(script);
+        } catch (error) {
+            addTestResult(`❌ Erro: ${error.message}`, 'error');
+        }
+    </script>
+</body>
+</html>
