@@ -80,7 +80,7 @@ function renderBills() {
     }
     
     filteredBills.forEach((bill, index) => {
-        console.log('Renderizando conta:', bill.company, bill.value);
+        console.log(Renderizando conta :, bill.company, bill.value);
         
         const row = document.createElement('tr');
         
@@ -103,32 +103,32 @@ function renderBills() {
             statusText = 'A pagar';
         }
         
-        row.innerHTML = `
+        row.innerHTML = 
             <td>
-                <div class="bill-company">${bill.company}</div>
-                <div class="bill-number">${bill.number}</div>
+                <div class="bill-company"></div>
+                <div class="bill-number"></div>
             </td>
             <td>
-                <span class="bill-parcels">${bill.parcels}</span>
+                <span class="bill-parcels"></span>
             </td>
-            <td class="bill-date">${bill.date}</td>
+            <td class="bill-date"></td>
             <td>
-                <span class="${statusClass}">${statusText}</span>
+                <span class=""></span>
             </td>
             <td>
-                <div class="bill-value">${formatCurrency(bill.value)}</div>
+                <div class="bill-value"></div>
             </td>
             <td>
                 <div class="bill-actions">
-                    <button class="btn btn-edit" onclick="editBill(${bill.id})">
+                    <button class="btn btn-edit" onclick="editBill()">
                         <i class="fas fa-edit"></i> Editar
                     </button>
-                    <button class="btn btn-delete" onclick="deleteBill(${bill.id})">
+                    <button class="btn btn-delete" onclick="deleteBill()">
                         <i class="fas fa-trash"></i> Excluir
                     </button>
                 </div>
             </td>
-        `;
+        ;
         
         tbody.appendChild(row);
     });
@@ -179,7 +179,7 @@ function updateSummary() {
         console.log('Dias úteis atualizado:', workingDays);
     }
     if (filteredCountEl) {
-        filteredCountEl.textContent = `${filteredBills.length} contas`;
+        filteredCountEl.textContent = ${filteredBills.length} contas;
         console.log('Contador de contas atualizado:', filteredBills.length);
     }
     if (balanceDisplayEl) {
@@ -313,7 +313,7 @@ function importBills() {
     if (file) {
         selectedFile = file;
         document.getElementById('modalTitle').textContent = 'Importar Contas';
-        document.getElementById('modalMessage').textContent = `Deseja importar as contas do arquivo "${file.name}"?`;
+        document.getElementById('modalMessage').textContent = Deseja importar as contas do arquivo ""?;
         document.getElementById('modal').style.display = 'block';
         console.log('Arquivo selecionado:', file.name);
     } else {
@@ -373,7 +373,7 @@ function confirmImport() {
                 filteredBills = [...bills];
                 renderBills();
                 updateSummary();
-                alert(`Importadas ${newBills.length} contas com sucesso!`);
+                alert(Importadas  contas com sucesso!);
                 console.log('Importação concluída:', newBills.length, 'contas');
             } else {
                 alert('Nenhuma conta válida encontrada no arquivo');
@@ -389,10 +389,10 @@ function confirmImport() {
 function downloadTemplate() {
     console.log('=== BAIXANDO TEMPLATE ===');
     
-    const template = `EMPRESA - NF NUMERO\tPARCELA\tDATA\tVALOR
+    const template = EMPRESA - NF NUMERO\tPARCELA\tDATA\tVALOR
 ARTECOLA - NF 651630\t1/3\t16/09/2025\tR$ 1.498,72
 EXEMPLO - NF 123456\t2/3\t17/09/2025\tR$ 2.500,00
-TESTE - NF 789012\t3/3\t18/09/2025\tR$ 1.200,50`;
+TESTE - NF 789012\t3/3\t18/09/2025\tR$ 1.200,50;
     
     const blob = new Blob([template], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
