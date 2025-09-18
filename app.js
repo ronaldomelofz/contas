@@ -10,7 +10,7 @@ const defaultBills = [
     {id: 7, company: 'EMPRÉSTIMO ITAÚ', number: '', parcels: '22/42', date: '19/09/2025', value: 41345.46},
     {id: 8, company: 'FLORA', number: 'NF 131545', parcels: '2/3', date: '19/09/2025', value: 37085.94},
     {id: 9, company: 'IBRAP', number: 'NF 664371', parcels: '3/5', date: '19/09/2025', value: 225.76},
-    {id: 10, company: 'FGTS', number: '', parcels: 'MENSAL', date: '20/09/2025', value: 1200.00},
+    {id: 10, company: 'FGTS', number: '', parcels: 'MENSAL', date: '20/09/2025', value: 1399.43},
     {id: 11, company: 'FRETE - METALFIXE', number: 'NF 23848 - TRL', parcels: '1/1', date: '20/09/2025', value: 425.41},
     {id: 12, company: 'INSS', number: '', parcels: 'MENSAL', date: '20/09/2025', value: 7000.00},
     {id: 13, company: 'TEGUS', number: 'NF 26670', parcels: '1/3', date: '20/09/2025', value: 2588.34},
@@ -58,7 +58,7 @@ function saveBillsToStorage() {
     try {
         localStorage.setItem(STORAGE_KEYS.BILLS, JSON.stringify(bills));
         localStorage.setItem(STORAGE_KEYS.LAST_MODIFIED, new Date().toISOString());
-        console.log('✅ Contas salvas no localStorage:', bills.length, 'contas');
+    console.log('✅ Contas salvas no localStorage:', bills.length, 'contas');
     } catch (error) {
         console.error('❌ Erro ao salvar contas:', error);
         alert('Erro ao salvar as alterações. Tente novamente.');
@@ -71,7 +71,7 @@ function loadBillsFromStorage() {
         const savedBills = localStorage.getItem(STORAGE_KEYS.BILLS);
         if (savedBills) {
             bills = JSON.parse(savedBills);
-            console.log('✅ Contas carregadas do localStorage:', bills.length, 'contas');
+        console.log('✅ Contas carregadas do localStorage:', bills.length, 'contas');
             return true;
         }
     } catch (error) {
@@ -82,10 +82,10 @@ function loadBillsFromStorage() {
 
 // Função para inicializar contas
 function initializeBills() {
-    if (!loadBillsFromStorage()) {
-        bills = [...defaultBills];
-        saveBillsToStorage();
-        console.log('🔄 Contas inicializadas com dados padrão');
+    // Sempre usar dados padrão atualizados para garantir valores corretos
+    bills = [...defaultBills];
+    saveBillsToStorage();
+    console.log('🔄 Contas inicializadas com dados padrão');
     }
     filteredBills = [...bills];
 }
@@ -152,7 +152,7 @@ function renderBills() {
     tbody.innerHTML = '';
     
     if (filteredBills.length === 0) {
-        console.log('Nenhuma conta para renderizar');
+    console.log('Nenhuma conta para renderizar');
         const row = document.createElement('tr');
         row.innerHTML = '<td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">Nenhuma conta encontrada no período selecionado</td>';
         tbody.appendChild(row);
@@ -169,7 +169,7 @@ function renderBills() {
     console.log('Contas ordenadas por data:', sortedBills.map(bill => ({ company: bill.company, date: bill.date })));
     
     sortedBills.forEach((bill, index) => {
-        console.log('Renderizando conta:', bill.company, bill.value, 'ID:', bill.id, 'Data:', bill.date);
+    console.log('Renderizando conta:', bill.company, bill.value, 'ID:', bill.id, 'Data:', bill.date);
         
         const row = document.createElement('tr');
         
@@ -227,35 +227,35 @@ function updateSummary() {
     
     if (totalBillsEl) {
         totalBillsEl.textContent = formatCurrency(totalBills);
-        console.log('Total contas atualizado:', formatCurrency(totalBills));
+    console.log('Total contas atualizado:', formatCurrency(totalBills));
     } else {
         console.error('Elemento totalBills não encontrado!');
     }
     
     if (totalGeneralEl) {
         totalGeneralEl.textContent = formatCurrency(totalBills);
-        console.log('Total geral atualizado:', formatCurrency(totalBills));
+    console.log('Total geral atualizado:', formatCurrency(totalBills));
     } else {
         console.error('Elemento totalGeneral não encontrado!');
     }
     
     if (dailyAmountEl) {
         dailyAmountEl.textContent = formatCurrency(dailyAmount);
-        console.log('Valor por dia atualizado:', formatCurrency(dailyAmount));
+    console.log('Valor por dia atualizado:', formatCurrency(dailyAmount));
     } else {
         console.error('Elemento dailyAmount não encontrado!');
     }
     
     if (workingDaysEl) {
         workingDaysEl.textContent = workingDays.toString();
-        console.log('Dias úteis atualizado:', workingDays);
+    console.log('Dias úteis atualizado:', workingDays);
     } else {
         console.error('Elemento workingDays não encontrado!');
     }
     
     if (filteredCountEl) {
         filteredCountEl.textContent = `${filteredBills.length} contas`;
-        console.log('Contador de contas atualizado:', filteredBills.length);
+    console.log('Contador de contas atualizado:', filteredBills.length);
     } else {
         console.error('Elemento filteredCount não encontrado!');
     }
@@ -282,11 +282,11 @@ function applyFilter() {
             return billDate >= start && billDate <= end;
         });
         
-        console.log('Contas filtradas:', filteredBills.length);
-        console.log('Contas filtradas detalhes:', filteredBills.map(b => ({ company: b.company, date: b.date })));
+    console.log('Contas filtradas:', filteredBills.length);
+    console.log('Contas filtradas detalhes:', filteredBills.map(b => ({ company: b.company, date: b.date })));
     } else {
         filteredBills = [...bills];
-        console.log('Filtro limpo, mostrando todas as contas');
+    console.log('Filtro limpo, mostrando todas as contas');
     }
     
     // FORÇAR RENDERIZAÇÃO EM MOBILE
@@ -326,7 +326,7 @@ function importBills() {
         document.getElementById('modalTitle').textContent = 'Importar Contas';
         document.getElementById('modalMessage').textContent = `Deseja importar as contas do arquivo "${file.name}"?`;
         document.getElementById('modal').style.display = 'block';
-        console.log('Arquivo selecionado:', file.name);
+    console.log('Arquivo selecionado:', file.name);
     } else {
         alert('Por favor, selecione um arquivo primeiro!');
     }
@@ -343,8 +343,8 @@ function confirmImport() {
             const lines = content.split('\n');
             const newBills = [];
             
-            console.log('Processando arquivo...');
-            console.log('Linhas encontradas:', lines.length);
+        console.log('Processando arquivo...');
+        console.log('Linhas encontradas:', lines.length);
             
             lines.forEach((line, index) => {
                 if (line.trim() && index > 0) {
@@ -371,9 +371,9 @@ function confirmImport() {
                                 value: value
                             });
                             
-                            console.log('Conta processada:', company, value);
+                        console.log('Conta processada:', company, value);
                         } catch (error) {
-                            console.log('Erro ao processar linha:', line, error);
+                        console.log('Erro ao processar linha:', line, error);
                         }
                     }
                 }
@@ -382,14 +382,14 @@ function confirmImport() {
             if (newBills.length > 0) {
                 bills = newBills;
                 filteredBills = [...bills];
-                saveBillsToStorage();
+            saveBillsToStorage();
                 renderBills();
                 updateSummary();
                 alert(`Importadas ${newBills.length} contas com sucesso!`);
-                console.log('Importação concluída:', newBills.length, 'contas');
+            console.log('Importação concluída:', newBills.length, 'contas');
             } else {
                 alert('Nenhuma conta válida encontrada no arquivo');
-                console.log('Nenhuma conta válida encontrada');
+            console.log('Nenhuma conta válida encontrada');
             }
         };
         reader.readAsText(selectedFile);
@@ -456,7 +456,7 @@ function editBill(id) {
             bill.date = newDate;
             bill.value = parseFloat(newValue);
             
-            saveBillsToStorage();
+        saveBillsToStorage();
             
             // Reaplicar filtro se ativo
             const startDate = document.getElementById('startDate').value;
@@ -476,7 +476,7 @@ function editBill(id) {
             renderBills();
             updateSummary();
             
-            console.log('Conta editada com sucesso:', bill);
+        console.log('Conta editada com sucesso:', bill);
             alert('Conta editada com sucesso!');
         }
     }
@@ -505,14 +505,14 @@ function deleteBill(id) {
         }
         
         if (bills.length < originalLength) {
-            saveBillsToStorage();
+        saveBillsToStorage();
             
             renderBills();
             updateSummary();
-            console.log('Conta excluída com sucesso');
+        console.log('Conta excluída com sucesso');
             alert('Conta excluída com sucesso!');
         } else {
-            console.log('Conta não encontrada para exclusão');
+        console.log('Conta não encontrada para exclusão');
         }
     }
 }
@@ -602,7 +602,7 @@ function addNewBill(event) {
     const endDate = document.getElementById('endDate').value;
     
     if (startDate && endDate) {
-        console.log('Aplicando filtro após adicionar nova conta');
+    console.log('Aplicando filtro após adicionar nova conta');
         const start = new Date(startDate);
         const end = new Date(endDate);
         
@@ -611,7 +611,7 @@ function addNewBill(event) {
             return billDate >= start && billDate <= end;
         });
     } else {
-        console.log('Sem filtro ativo, mostrando todas as contas');
+    console.log('Sem filtro ativo, mostrando todas as contas');
         filteredBills = [...bills];
     }
     
@@ -694,7 +694,7 @@ function loginAdmin(event) {
     console.log('Credenciais fornecidas:', { username, password: '***' });
     
     if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        console.log('✅ Login administrativo bem-sucedido');
+    console.log('✅ Login administrativo bem-sucedido');
         
         isAdminLoggedIn = true;
         localStorage.setItem(STORAGE_KEYS.ADMIN_LOGGED_IN, 'true');
@@ -704,7 +704,7 @@ function loginAdmin(event) {
         
         alert('Login realizado com sucesso! Bem-vindo ao painel administrativo.');
     } else {
-        console.log('❌ Login administrativo falhou');
+    console.log('❌ Login administrativo falhou');
         
         document.getElementById('loginError').style.display = 'block';
         document.getElementById('adminPassword').value = '';
@@ -788,20 +788,20 @@ function resetAllData() {
     
     if (confirm('ATENÇÃO: Esta ação irá resetar TODOS os dados do sistema para o estado inicial. Esta ação NÃO pode ser desfeita!\n\nTem certeza que deseja continuar?')) {
         if (confirm('ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente!\n\nClique OK para confirmar o reset.')) {
-            bills = [...defaultBills];
+        bills = [...defaultBills];
             filteredBills = [...bills];
             
             localStorage.removeItem(STORAGE_KEYS.BILLS);
             localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
             
-            saveBillsToStorage();
+        saveBillsToStorage();
             
             renderBills();
             updateSummary();
             updateAdminStats();
             
             alert('Sistema resetado com sucesso! Todos os dados foram restaurados ao estado inicial.');
-            console.log('Sistema resetado com sucesso');
+        console.log('Sistema resetado com sucesso');
         }
     }
 }
@@ -818,7 +818,7 @@ function forceMobileInit() {
     elements.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            console.log(`✅ Elemento ${id} encontrado`);
+        console.log(`✅ Elemento ${id} encontrado`);
         } else {
             console.error(`❌ Elemento ${id} NÃO encontrado!`);
         }
@@ -827,9 +827,9 @@ function forceMobileInit() {
     if (bills.length > 0) {
         renderBills();
         updateSummary();
-        console.log('✅ Renderização forçada concluída');
+    console.log('✅ Renderização forçada concluída');
     } else {
-        console.log('⚠️ Nenhuma conta para renderizar');
+    console.log('⚠️ Nenhuma conta para renderizar');
     }
 }
 
@@ -838,10 +838,10 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js')
             .then(function(registration) {
-                console.log('✅ Service Worker registrado com sucesso:', registration.scope);
+            console.log('✅ Service Worker registrado com sucesso:', registration.scope);
             })
             .catch(function(error) {
-                console.log('❌ Falha ao registrar Service Worker:', error);
+            console.log('❌ Falha ao registrar Service Worker:', error);
             });
     });
 }
@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const adminLoggedIn = localStorage.getItem(STORAGE_KEYS.ADMIN_LOGGED_IN);
     if (adminLoggedIn === 'true') {
         isAdminLoggedIn = true;
-        console.log('Admin já estava logado');
+    console.log('Admin já estava logado');
     }
     
     initializeBills();
@@ -881,13 +881,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBillForm = document.getElementById('addBillForm');
     if (addBillForm) {
         addBillForm.addEventListener('submit', addNewBill);
-        console.log('Event listener do formulário de adicionar conta configurado');
+    console.log('Event listener do formulário de adicionar conta configurado');
     }
     
     const adminLoginForm = document.getElementById('adminLoginForm');
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', loginAdmin);
-        console.log('Event listener do formulário de login administrativo configurado');
+    console.log('Event listener do formulário de login administrativo configurado');
     }
     
     console.log('=== APLICAÇÃO INICIALIZADA COM SUCESSO ===');
