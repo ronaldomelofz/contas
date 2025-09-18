@@ -60,6 +60,25 @@ function calculateWorkingDays(startDate, endDate) {
     return workingDays;
 }
 
+// Função para obter o período de filtro atual
+function getCurrentFilterPeriod() {
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    
+    if (startDateInput && endDateInput && startDateInput.value && endDateInput.value) {
+        return {
+            start: startDateInput.value,
+            end: endDateInput.value
+        };
+    }
+    
+    // Se não há filtro ativo, usar o período padrão
+    return {
+        start: '2025-09-17',
+        end: '2025-09-30'
+    };
+}
+
 // Função para renderizar contas na tabela
 function renderBills() {
     console.log('=== RENDERIZANDO CONTAS ===');
@@ -142,9 +161,14 @@ function updateSummary() {
     
     const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
     const totalWithBalance = totalBills + bankBalance;
-    const workingDays = 12; // Dias úteis de 17/09 a 30/09
-    const dailyAmount = totalWithBalance / workingDays;
     
+    // Calcular dias úteis baseado no período de filtro atual
+    const filterPeriod = getCurrentFilterPeriod();
+    const workingDays = calculateWorkingDays(filterPeriod.start, filterPeriod.end);
+    const dailyAmount = workingDays > 0 ? totalWithBalance / workingDays : 0;
+    
+    console.log('Período de filtro:', filterPeriod);
+    console.log('Dias úteis calculados:', workingDays);
     console.log('Total contas:', totalBills);
     console.log('Saldo bancário:', bankBalance);
     console.log('Total geral:', totalWithBalance);
