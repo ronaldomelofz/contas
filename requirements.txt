@@ -1,5 +1,0 @@
-# Sistema de Contas - Dependências Python
-# Este projeto é um site estático, mas aqui estão as dependências caso seja necessário um backend Python
-
-flask==2.3.3
-gunicorn==21.2.0
