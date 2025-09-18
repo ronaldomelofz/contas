@@ -1,4 +1,4 @@
-// SISTEMA DE CONTAS - VERSÃO MOBILE CORRIGIDA E OTIMIZADA
+// SISTEMA DE CONTAS - VERSÃO SEM SALDO BANCÁRIO
 // Dados padrão das contas (usados apenas na primeira vez)
 const defaultBills = [
     {id: 1, company: 'FLORA', number: 'NF 130165', parcels: '3/3', date: '17/09/2025', value: 33825.36},
@@ -36,7 +36,6 @@ const defaultBills = [
 
 // Variáveis globais
 let bills = [];
-let bankBalance = 0.0;
 let filteredBills = [];
 let selectedFile = null;
 let isAdminLoggedIn = false;
@@ -44,7 +43,6 @@ let isAdminLoggedIn = false;
 // Chaves para localStorage
 const STORAGE_KEYS = {
     BILLS: 'contas_bills',
-    BANK_BALANCE: 'contas_bank_balance',
     LAST_MODIFIED: 'contas_last_modified',
     ADMIN_LOGGED_IN: 'contas_admin_logged_in'
 };
@@ -139,13 +137,11 @@ function parseDate(dateStr) {
     return new Date(year, month - 1, day);
 }
 
-// Função para renderizar contas na tabela - VERSÃO MOBILE OTIMIZADA
+// Função para renderizar contas na tabela
 function renderBills() {
     console.log('=== RENDERIZANDO CONTAS ===');
     console.log('Total de contas:', bills.length);
     console.log('Contas filtradas:', filteredBills.length);
-    console.log('Array bills:', bills);
-    console.log('Array filteredBills:', filteredBills);
     
     const tbody = document.getElementById('billsTableBody');
     if (!tbody) {
@@ -212,26 +208,22 @@ function updateSummary() {
     console.log('=== ATUALIZANDO RESUMO ===');
     
     const totalBills = filteredBills.reduce((sum, bill) => sum + bill.value, 0);
-    const totalWithBalance = totalBills + bankBalance;
     
+    // Calcular dias úteis baseado no período de filtro atual
     const filterPeriod = getCurrentFilterPeriod();
     const workingDays = calculateWorkingDays(filterPeriod.start, filterPeriod.end);
-    const dailyAmount = workingDays > 0 ? totalWithBalance / workingDays : 0;
+    const dailyAmount = workingDays > 0 ? totalBills / workingDays : 0;
     
     console.log('Período de filtro:', filterPeriod);
     console.log('Dias úteis calculados:', workingDays);
     console.log('Total contas:', totalBills);
-    console.log('Saldo bancário:', bankBalance);
-    console.log('Total geral:', totalWithBalance);
     console.log('Valor por dia:', dailyAmount);
     
     const totalBillsEl = document.getElementById('totalBills');
-    const bankBalanceEl = document.getElementById('bankBalanceDisplay');
     const totalGeneralEl = document.getElementById('totalGeneral');
     const dailyAmountEl = document.getElementById('dailyAmount');
     const workingDaysEl = document.getElementById('workingDays');
     const filteredCountEl = document.getElementById('filteredCount');
-    const balanceDisplayEl = document.getElementById('balanceDisplay');
     
     if (totalBillsEl) {
         totalBillsEl.textContent = formatCurrency(totalBills);
@@ -240,16 +232,9 @@ function updateSummary() {
         console.error('Elemento totalBills não encontrado!');
     }
     
-    if (bankBalanceEl) {
-        bankBalanceEl.textContent = formatCurrency(bankBalance);
-        console.log('Saldo bancário atualizado:', formatCurrency(bankBalance));
-    } else {
-        console.error('Elemento bankBalanceDisplay não encontrado!');
-    }
-    
     if (totalGeneralEl) {
-        totalGeneralEl.textContent = formatCurrency(totalWithBalance);
-        console.log('Total geral atualizado:', formatCurrency(totalWithBalance));
+        totalGeneralEl.textContent = formatCurrency(totalBills);
+        console.log('Total geral atualizado:', formatCurrency(totalBills));
     } else {
         console.error('Elemento totalGeneral não encontrado!');
     }
@@ -275,80 +260,10 @@ function updateSummary() {
         console.error('Elemento filteredCount não encontrado!');
     }
     
-    if (balanceDisplayEl) {
-        balanceDisplayEl.textContent = formatCurrency(bankBalance);
-        console.log('Display do saldo atualizado:', formatCurrency(bankBalance));
-    } else {
-        console.error('Elemento balanceDisplay não encontrado!');
-    }
-    
-    if (bankBalanceEl) {
-        bankBalanceEl.className = 'card-value';
-        if (bankBalance > 0) {
-            bankBalanceEl.style.color = '#dc2626';
-        } else if (bankBalance < 0) {
-            bankBalanceEl.style.color = '#16a34a';
-        } else {
-            bankBalanceEl.style.color = '#6b7280';
-        }
-    }
-    
     console.log('=== RESUMO ATUALIZADO ===');
 }
 
-// Função para atualizar saldo bancário
-function updateBalance() {
-    console.log('=== ATUALIZANDO SALDO BANCÁRIO ===');
-    
-    const input = document.getElementById('balanceInput');
-    console.log('Campo balanceInput encontrado:', input);
-    
-    if (!input) {
-        console.error('Campo balanceInput não encontrado!');
-        alert('Erro: Campo de saldo não encontrado!');
-        return;
-    }
-    
-    const inputValue = input.value;
-    console.log('Valor digitado no input:', inputValue);
-    
-    if (!inputValue || inputValue.trim() === '') {
-        alert('Por favor, digite um valor para o saldo bancário!');
-        return;
-    }
-    
-    const balance = parseFloat(inputValue.replace(',', '.')) || 0;
-    console.log('Valor processado:', balance);
-    
-    if (isNaN(balance)) {
-        alert('Por favor, digite um valor numérico válido!');
-        return;
-    }
-    
-    bankBalance = balance;
-    console.log('Saldo bancário definido como:', bankBalance);
-    
-    localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, balance.toString());
-    console.log('Saldo bancário salvo no localStorage:', balance);
-    
-    updateSummary();
-    
-    const button = document.querySelector('button[onclick="updateBalance()"]');
-    if (button) {
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-check"></i> Atualizado!';
-        button.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.style.background = '';
-        }, 2000);
-    }
-    
-    console.log('=== SALDO BANCÁRIO ATUALIZADO COM SUCESSO ===');
-}
-
-// Função para aplicar filtro de datas - VERSÃO MOBILE CORRIGIDA
+// Função para aplicar filtro de datas
 function applyFilter() {
     console.log('=== APLICANDO FILTRO ===');
     
@@ -849,7 +764,6 @@ function exportData() {
     
     const data = {
         bills: bills,
-        bankBalance: bankBalance,
         exportDate: new Date().toISOString(),
         version: '1.0.0'
     };
@@ -876,19 +790,11 @@ function resetAllData() {
         if (confirm('ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente!\n\nClique OK para confirmar o reset.')) {
             bills = [...defaultBills];
             filteredBills = [...bills];
-            bankBalance = 0.0;
             
             localStorage.removeItem(STORAGE_KEYS.BILLS);
-            localStorage.removeItem(STORAGE_KEYS.BANK_BALANCE);
             localStorage.removeItem(STORAGE_KEYS.LAST_MODIFIED);
             
             saveBillsToStorage();
-            localStorage.setItem(STORAGE_KEYS.BANK_BALANCE, '0');
-            
-            const balanceInput = document.getElementById('balanceInput');
-            if (balanceInput) {
-                balanceInput.value = '0';
-            }
             
             renderBills();
             updateSummary();
@@ -905,8 +811,8 @@ function forceMobileInit() {
     console.log('=== FORÇANDO INICIALIZAÇÃO MOBILE ===');
     
     const elements = [
-        'totalBills', 'bankBalanceDisplay', 'totalGeneral', 'dailyAmount',
-        'workingDays', 'filteredCount', 'balanceDisplay', 'billsTableBody'
+        'totalBills', 'totalGeneral', 'dailyAmount',
+        'workingDays', 'filteredCount', 'billsTableBody'
     ];
     
     elements.forEach(id => {
@@ -953,16 +859,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeBills();
     
-    const savedBalance = localStorage.getItem(STORAGE_KEYS.BANK_BALANCE);
-    if (savedBalance !== null) {
-        bankBalance = parseFloat(savedBalance);
-        const balanceInput = document.getElementById('balanceInput');
-        if (balanceInput) {
-            balanceInput.value = bankBalance;
-        }
-        console.log('Saldo bancário carregado do localStorage:', bankBalance);
-    }
-    
     filteredBills = [...bills];
     console.log('Contas filtradas inicializadas:', filteredBills.length);
     
@@ -971,20 +867,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Chamando updateSummary()...');
     updateSummary();
-    
-    const balanceInput = document.getElementById('balanceInput');
-    if (balanceInput) {
-        balanceInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                console.log('Enter pressionado no campo de saldo');
-                updateBalance();
-            }
-        });
-        
-        balanceInput.addEventListener('input', function(e) {
-            console.log('Valor digitado no campo de saldo:', e.target.value);
-        });
-    }
     
     const startDate = document.getElementById('startDate');
     const endDate = document.getElementById('endDate');
@@ -1028,7 +910,6 @@ setTimeout(function() {
 }, 2000);
 
 // Debug: Verificar se as funções estão disponíveis globalmente
-window.updateBalance = updateBalance;
 window.applyFilter = applyFilter;
 window.clearFilter = clearFilter;
 window.importBills = importBills;
@@ -1050,7 +931,6 @@ window.resetAllData = resetAllData;
 window.forceMobileInit = forceMobileInit;
 
 console.log('=== FUNÇÕES GLOBAIS DEFINIDAS ===');
-console.log('updateBalance disponível:', typeof window.updateBalance);
 console.log('applyFilter disponível:', typeof window.applyFilter);
 console.log('clearFilter disponível:', typeof window.clearFilter);
 console.log('openAddModal disponível:', typeof window.openAddModal);

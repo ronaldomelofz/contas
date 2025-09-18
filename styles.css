@@ -121,7 +121,7 @@ body {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
-.summary-card:nth-child(3) {
+.summary-card:nth-child(2) {
     background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     color: white;
     animation: pulse 2s infinite, glow 3s infinite, shine 4s infinite;
@@ -143,7 +143,7 @@ body {
     100% { background-position: 200% center; }
 }
 
-.summary-card:nth-child(3)::before {
+.summary-card:nth-child(2)::before {
     content: '';
     position: absolute;
     top: 0;
@@ -164,7 +164,7 @@ body {
     gap: 10px;
 }
 
-.summary-card:nth-child(3) h3 {
+.summary-card:nth-child(2) h3 {
     color: white;
 }
 
@@ -173,7 +173,7 @@ body {
     color: #667eea;
 }
 
-.summary-card:nth-child(3) h3 i {
+.summary-card:nth-child(2) h3 i {
     color: white;
 }
 
@@ -184,7 +184,7 @@ body {
     margin-bottom: 10px;
 }
 
-.summary-card:nth-child(3) .card-value {
+.summary-card:nth-child(2) .card-value {
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -197,109 +197,8 @@ body {
     gap: 5px;
 }
 
-.summary-card:nth-child(3) .card-info {
+.summary-card:nth-child(2) .card-info {
     color: rgba(255, 255, 255, 0.9);
-}
-
-/* Seção de saldo bancário */
-.balance-section {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.balance-section h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.balance-section h3 i {
-    color: #667eea;
-    font-size: 1.4rem;
-}
-
-.balance-controls {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.balance-input {
-    flex: 1;
-    min-width: 200px;
-    padding: 15px 20px;
-    border: 2px solid #e9ecef;
-    border-radius: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2c3e50;
-    background: #f8f9fa;
-    transition: all 0.3s ease;
-}
-
-.balance-input:focus {
-    outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.balance-input::placeholder {
-    color: #adb5bd;
-    font-weight: 400;
-}
-
-.btn-update {
-    padding: 15px 30px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    border-radius: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-
-.btn-update:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-}
-
-.btn-update:active {
-    transform: translateY(0);
-}
-
-.balance-display {
-    margin-top: 15px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.balance-display .card-value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #e74c3c;
 }
 
 /* Filtros de data */
@@ -1074,50 +973,6 @@ body {
         font-size: 0.8rem;
     }
     
-    .balance-section {
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 12px;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
-    .balance-section h3 {
-        font-size: 1.1rem;
-        margin-bottom: 12px;
-    }
-    
-    .balance-controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    
-    .balance-input {
-        min-width: auto;
-        width: 100%;
-        padding: 12px 15px;
-        font-size: 1rem;
-    }
-    
-    .btn-update {
-        padding: 12px 20px;
-        font-size: 1rem;
-        justify-content: center;
-        min-height: 44px;
-    }
-    
-    .balance-display {
-        margin-top: 10px;
-        padding: 10px;
-        font-size: 1rem;
-    }
-    
-    .balance-display .card-value {
-        font-size: 1.1rem;
-    }
-    
     .date-filters {
         padding: 15px;
         margin-bottom: 15px;
@@ -1373,7 +1228,6 @@ body {
 @media (max-width: 768px) {
     .btn,
     .tab-button,
-    .btn-update,
     .btn-filter,
     .btn-clear,
     .btn-add-bill,
@@ -1397,11 +1251,11 @@ body {
 
 /* Otimizações para performance em mobile */
 @media (max-width: 768px) {
-    .summary-card:nth-child(3) {
+    .summary-card:nth-child(2) {
         animation: none;
     }
     
-    .summary-card:nth-child(3)::before {
+    .summary-card:nth-child(2)::before {
         display: none;
     }
 }
