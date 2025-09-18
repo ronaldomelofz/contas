@@ -284,6 +284,24 @@ body {
     transform: translateY(0);
 }
 
+.balance-display {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.balance-display .card-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #e74c3c;
+}
+
 /* Filtros de data */
 .date-filters {
     background: rgba(255, 255, 255, 0.95);
@@ -460,6 +478,7 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    min-width: 600px;
 }
 
 .bills-table th {
@@ -803,6 +822,30 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.admin-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-header h3 i {
+    color: #667eea;
+    font-size: 1.6rem;
+}
+
 .admin-section {
     margin-bottom: 30px;
     padding: 20px;
@@ -971,7 +1014,7 @@ body {
     display: none;
 }
 
-/* RESPONSIVIDADE MOBILE */
+/* RESPONSIVIDADE MOBILE - VERSÃO PROFISSIONAL */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -980,73 +1023,257 @@ body {
     .header {
         padding: 20px;
         margin-bottom: 20px;
+        border-radius: 15px;
     }
     
     .header h1 {
         font-size: 2rem;
+        margin-bottom: 15px;
     }
     
     .tab-navigation {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
+        margin-top: 15px;
     }
     
     .tab-button {
         width: 100%;
         justify-content: center;
         padding: 15px 20px;
+        font-size: 1.1rem;
+        border-radius: 15px;
     }
     
     .summary-cards {
         grid-template-columns: 1fr;
         gap: 15px;
+        margin-bottom: 20px;
     }
     
     .summary-card {
         padding: 20px;
+        border-radius: 15px;
+    }
+    
+    .summary-card h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
     }
     
     .card-value {
         font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .card-info {
+        font-size: 0.85rem;
+    }
+    
+    .balance-section {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+    
+    .balance-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
     }
     
     .balance-controls {
         flex-direction: column;
         align-items: stretch;
+        gap: 12px;
     }
     
     .balance-input {
         min-width: auto;
         width: 100%;
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .btn-update {
+        padding: 12px 20px;
+        font-size: 1rem;
+        justify-content: center;
+    }
+    
+    .balance-display {
+        margin-top: 12px;
+        padding: 12px;
+        font-size: 1rem;
+    }
+    
+    .balance-display .card-value {
+        font-size: 1.2rem;
+    }
+    
+    .date-filters {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+    
+    .date-filters h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
     }
     
     .filter-controls {
         flex-direction: column;
         align-items: stretch;
+        gap: 12px;
     }
     
     .date-input {
         min-width: auto;
         width: 100%;
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .btn-filter,
+    .btn-clear {
+        padding: 12px 20px;
+        font-size: 1rem;
+        justify-content: center;
+    }
+    
+    .add-bill-section {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+    
+    .add-bill-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .btn-add-bill {
+        padding: 12px 20px;
+        font-size: 1rem;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .bills-section {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        overflow-x: auto;
+    }
+    
+    .bills-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
     }
     
     .bills-table {
         font-size: 0.9rem;
+        min-width: 500px;
     }
     
-    .bills-table th,
+    .bills-table th {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+    
     .bills-table td {
         padding: 12px 8px;
     }
     
+    .bill-company {
+        font-size: 1rem;
+    }
+    
+    .bill-number {
+        font-size: 0.8rem;
+    }
+    
+    .bill-parcels {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        min-width: 50px;
+    }
+    
+    .bill-date {
+        font-size: 1rem;
+    }
+    
+    .bill-value {
+        font-size: 1.1rem;
+    }
+    
     .bill-actions {
         flex-direction: column;
-        gap: 5px;
+        gap: 8px;
     }
     
     .btn {
-        padding: 8px 15px;
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        justify-content: center;
+        min-height: 44px;
+    }
+    
+    .admin-panel {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .admin-header h3 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .admin-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .admin-section h4 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .stat-item {
+        padding: 12px;
+    }
+    
+    .stat-item h5 {
         font-size: 0.8rem;
+    }
+    
+    .stat-item p {
+        font-size: 1.3rem;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn-admin {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        min-height: 44px;
     }
     
     .modal-content,
@@ -1055,19 +1282,33 @@ body {
         width: 95%;
         margin: 5% auto;
         padding: 20px;
+        border-radius: 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3rem;
     }
     
     .form-actions {
         flex-direction: column;
+        gap: 12px;
     }
     
-    .admin-actions {
-        flex-direction: column;
-    }
-    
-    .btn-admin {
+    .btn-confirm,
+    .btn-cancel,
+    .btn-save,
+    .btn-cancel-form {
         width: 100%;
         justify-content: center;
+        padding: 12px 20px;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 12px 15px;
+        font-size: 1rem;
     }
 }
 
@@ -1086,6 +1327,7 @@ body {
     
     .bills-table {
         font-size: 0.8rem;
+        min-width: 450px;
     }
     
     .bills-table th,
@@ -1094,7 +1336,7 @@ body {
     }
     
     .bill-company {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     .bill-value {
@@ -1102,8 +1344,8 @@ body {
     }
     
     .btn {
-        padding: 6px 12px;
-        font-size: 0.7rem;
+        padding: 8px 12px;
+        font-size: 0.8rem;
     }
 }
 
