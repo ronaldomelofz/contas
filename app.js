@@ -360,7 +360,7 @@ function confirmImport() {
                             const company = nameMatch ? nameMatch[1].trim() : fullName;
                             const number = nameMatch ? nameMatch[2].trim() : '';
                             
-                            const value = parseFloat(valueStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
+                            const value = parseValueFromMask(valueStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
                             
                             newBills.push({
                                 id: bills.length + newBills.length + 1,
@@ -454,7 +454,7 @@ function editBill(id) {
             bill.number = newNumber;
             bill.parcels = newParcels;
             bill.date = newDate;
-            bill.value = parseFloat(newValue);
+            bill.value = parseValueFromMask(newValue);
             
         saveBillsToStorage();
             
@@ -549,7 +549,7 @@ function addNewBill(event) {
     const number = document.getElementById('addNumber').value.trim();
     const parcels = document.getElementById('addParcels').value.trim();
     const date = document.getElementById('addDate').value;
-    const value = parseFloat(document.getElementById('addValue').value);
+    const value = parseValueFromMask(document.getElementById('addValue').value);
     
     console.log('Dados do formulário:', { company, number, parcels, date, value });
     
