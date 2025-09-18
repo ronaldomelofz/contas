@@ -73,9 +73,59 @@ body {
     box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
 }
 
+/* CARD TOTAL GERAL - DESTACADO COM ANIMAÇÃO PISCANTE */
 .summary-card:nth-child(3) {
-    background: linear-gradient(135deg, #45b7d1, #96c93d);
-    box-shadow: 0 10px 30px rgba(69, 183, 209, 0.3);
+    background: linear-gradient(135deg, #ff6b35, #ff8e53, #ff6b35);
+    background-size: 200% 200%;
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
+    animation: pulseGlow 2s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
+    border: 3px solid #fff;
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+/* Animação de pulsação e brilho para o Total Geral */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6), 0 0 20px rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+    }
+    50% {
+        box-shadow: 0 20px 50px rgba(255, 107, 53, 0.8), 0 0 30px rgba(255, 255, 255, 0.5);
+        transform: scale(1.08);
+    }
+}
+
+/* Animação de gradiente para o Total Geral */
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Efeito de brilho interno para o Total Geral */
+.summary-card:nth-child(3)::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shine 2s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
 }
 
 .summary-card:nth-child(4) {
@@ -91,6 +141,12 @@ body {
 .summary-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover especial para o Total Geral */
+.summary-card:nth-child(3):hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 25px 60px rgba(255, 107, 53, 0.9), 0 0 40px rgba(255, 255, 255, 0.6);
 }
 
 .summary-card::before {
@@ -110,6 +166,21 @@ body {
     opacity: 0.9;
 }
 
+/* Ícone especial para o Total Geral */
+.summary-card:nth-child(3) .card-icon {
+    animation: iconPulse 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
 .card-content {
     position: relative;
     z-index: 1;
@@ -124,10 +195,45 @@ body {
     letter-spacing: 1px;
 }
 
+/* Label especial para o Total Geral */
+.summary-card:nth-child(3) .card-label {
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+}
+
 .card-value {
     font-size: 1.8rem;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Valor especial para o Total Geral */
+.summary-card:nth-child(3) .card-value {
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.4);
+    animation: valuePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes valuePulse {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.6);
+    }
 }
 
 /* Controles */
