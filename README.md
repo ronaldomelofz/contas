@@ -7,7 +7,6 @@ Sistema web para gerenciamento de contas a pagar com funcionalidades de importa�
 - ✅ Visualização de contas em formato compacto
 - ✅ Cálculo automático de totais e valores por dia útil
 - ✅ Filtro por período de datas
-- ✅ Saldo bancário integrado
 - ✅ Importação de contas via arquivo .txt
 - ✅ Download de template para importação
 - ✅ Interface responsiva e moderna
@@ -51,70 +50,88 @@ ARTECOLA - NF 651630   1/3        16/09/2025  R$ 1.498,72
 ## Estrutura do Projeto
 
 ```
+contas/
 ├── index.html          # Página principal
+├── styles.css          # Estilos CSS
 ├── app.js             # Lógica JavaScript
-├── styles.css         # Estilos CSS
-├── package.json       # Configuração do projeto
-├── netlify.toml       # Configuração do Netlify
-├── _redirects         # Redirecionamentos do Netlify
-├── requirements.txt   # Dependências Python (opcional)
-├── contas.txt         # Arquivo de contas de exemplo
-└── README.md          # Documentação
+├── manifest.json      # Configuração PWA
+├── sw.js             # Service Worker
+├── netlify.toml      # Configuração Netlify
+├── _redirects        # Regras de redirecionamento
+├── contas.txt        # Arquivo de exemplo
+└── README.md         # Este arquivo
 ```
 
 ## Desenvolvimento Local
 
+1. Clone o repositório
+2. Abra o arquivo `index.html` em um navegador
+3. Ou use um servidor local:
+
 ```bash
-# Executar servidor local
+# Python
 python -m http.server 8000
 
-# Ou usando Node.js
+# Node.js
 npx serve .
 
-# Acessar: http://localhost:8000
+# PHP
+php -S localhost:8000
 ```
 
 ## Tecnologias Utilizadas
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Deploy**: Netlify
-- **Estilo**: CSS Grid, Flexbox, Gradientes
-- **Ícones**: FontAwesome
-- **Fonte**: Segoe UI
+- **HTML5**: Estrutura semântica
+- **CSS3**: Estilos modernos com Grid e Flexbox
+- **JavaScript ES6+**: Lógica da aplicação
+- **PWA**: Progressive Web App
+- **Service Worker**: Cache offline
+- **LocalStorage**: Persistência de dados
 
 ## Funcionalidades Detalhadas
 
-### Gestão de Contas
-- Visualização de todas as contas em tabela responsiva
-- Status visual das contas (Vencida, Hoje, A pagar)
+### Gerenciamento de Contas
+- Visualização de todas as contas em tabela
+- Ordenação automática por data
 - Edição inline de contas
-- Exclusão de contas com confirmação
+- Exclusão com confirmação
+- Adição de novas contas
 
 ### Filtros e Relatórios
 - Filtro por período de datas
-- Cálculo automático de totais
+- Cálculo automático de dias úteis
 - Valor por dia útil
-- Contador de contas filtradas
+- Total geral das contas
 
-### Importação/Exportação
-- Importação de arquivos .txt
-- Download de template para importação
-- Processamento automático de dados
+### Importação e Exportação
+- Importação via arquivo .txt
+- Download de template
+- Exportação de dados em JSON
+- Backup completo do sistema
 
-### Saldo Bancário
-- Inserção de saldo bancário
-- Persistência no localStorage
-- Cálculo de total geral incluindo saldo
+### Interface Responsiva
+- Design mobile-first
+- Layout adaptativo
+- Touch-friendly
+- PWA instalável
 
-## Como Usar
+## Uso
 
-1. **Visualizar Contas**: As contas são carregadas automaticamente
-2. **Filtrar por Data**: Use os campos de data inicial e final
-3. **Atualizar Saldo**: Digite o saldo bancário e clique em "Atualizar"
-4. **Importar Contas**: Use o botão "Escolher Arquivo" para importar um arquivo .txt
-5. **Editar/Excluir**: Use os botões de ação na tabela de contas
-6. **Download Template**: Baixe o template para criar arquivos de importação
+1. **Visualizar Contas**: As contas são exibidas automaticamente na tabela
+2. **Filtrar por Data**: Use os campos de data para filtrar contas
+3. **Adicionar Conta**: Clique em "Adicionar Nova Conta" e preencha os dados
+4. **Editar Conta**: Clique em "Editar" na linha da conta desejada
+5. **Excluir Conta**: Clique em "Excluir" e confirme a ação
+6. **Importar Contas**: Acesse a aba "Administrador" e use a função de importação
 
-## Licença
+## Administração
 
-MIT License
+- **Login**: ADMIN / 1214
+- **Importar Dados**: Upload de arquivo .txt
+- **Exportar Dados**: Download em formato JSON
+- **Reset Sistema**: Restaurar dados padrão
+- **Estatísticas**: Informações do sistema
+
+## Suporte
+
+Para dúvidas ou problemas, consulte a documentação ou entre em contato com o desenvolvedor.
