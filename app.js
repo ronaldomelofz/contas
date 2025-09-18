@@ -154,7 +154,7 @@ function renderBills() {
     if (filteredBills.length === 0) {
         console.log('Nenhuma conta para renderizar');
         const row = document.createElement('tr');
-        row.innerHTML = '<td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">Nenhuma conta encontrada</td>';
+        row.innerHTML = '<td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">Nenhuma conta encontrada no período selecionado</td>';
         tbody.appendChild(row);
         return;
     }
@@ -188,10 +188,10 @@ function renderBills() {
             <td>
                 <div class="bill-actions">
                     <button class="btn btn-edit" onclick="editBill(${bill.id})">
-                        <i class="fas fa-edit"></i> Editar
+                        <i class="fas fa-edit"></i><span class="btn-text"> Editar</span>
                     </button>
                     <button class="btn btn-delete" onclick="deleteBill(${bill.id})">
-                        <i class="fas fa-trash"></i> Excluir
+                        <i class="fas fa-trash"></i><span class="btn-text"> Excluir</span>
                     </button>
                 </div>
             </td>

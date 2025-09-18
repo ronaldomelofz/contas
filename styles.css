@@ -350,6 +350,7 @@ body {
 
 .table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -360,7 +361,7 @@ body {
     background: white;
     border-radius: 15px;
     overflow: hidden;
-    min-width: 600px;
+    min-width: 100%;
 }
 
 .bills-table th {
@@ -778,7 +779,7 @@ body {
     
     .bills-table {
         font-size: 0.85rem;
-        min-width: 500px;
+        min-width: 100%;
     }
     
     .bills-table th {
@@ -946,7 +947,7 @@ body {
     
     .bills-table {
         font-size: 0.8rem;
-        min-width: 450px;
+        min-width: 100%;
     }
     
     .bills-table th {
@@ -1061,3 +1062,6 @@ body {
     color: white;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
+/* Melhorias específicas para mobile */
+.btn-text { display: inline; }
