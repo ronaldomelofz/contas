@@ -1,6 +1,6 @@
 [build]
-  publish = "."
-  command = "echo 'Site estático - sem build necessário'"
+  publish = "dist"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -9,3 +9,7 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 5173

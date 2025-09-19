@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTE - Modal de Edição</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: black; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .btn-edit { background-color: #4CAF50; color: white; border: none; }
+        .btn-save { background-color: #2196F3; color: white; border: none; }
+        .btn-cancel { background-color: #f44336; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Teste do Modal de Edição</h1>
+    
+    <button class="btn-edit" onclick="editBill(1)">Testar Modal de Edição</button>
+    
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Editar Conta</h2>
+            <form id="editBillForm">
+                <input type="hidden" id="editId">
+                <div>
+                    <label>Empresa:</label><br>
+                    <input type="text" id="editCompany" required>
+                </div>
+                <div>
+                    <label>Valor:</label><br>
+                    <input type="text" id="editValue" required>
+                </div>
+                <div>
+                    <button type="submit" class="btn-save">Salvar</button>
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function editBill(id) {
+            console.log('🔍 EDITANDO CONTA - ID:', id);
+            console.log('🔍 Modal editModal existe?', document.getElementById('editModal'));
+            
+            // Preencher dados de teste
+            document.getElementById('editId').value = id;
+            document.getElementById('editCompany').value = 'EMPRESA TESTE';
+            document.getElementById('editValue').value = '1.000,00';
+            
+            // Abrir modal
+            document.getElementById('editModal').style.display = 'block';
+            
+            console.log('✅ Modal de edição aberto');
+        }
+        
+        function closeEditModal() {
+            console.log('🔍 Fechando modal');
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Configurar formulário
+        document.getElementById('editBillForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Formulário enviado!');
+            closeEditModal();
+        });
+        
+        console.log('🚀 Script carregado');
+    </script>
+</body>
+</html>
