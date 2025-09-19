@@ -48,24 +48,76 @@ function App() {
     password: ''
   });
 
-  // Carregar dados iniciais
+  // Função para importar contas do arquivo contas.txt
+  const importBillsFromFile = async () => {
+    try {
+      const response = await fetch('/contas.txt');
+      const text = await response.text();
+      
+      const lines = text.split('\n').filter(line => line.trim() && !line.includes('EMPRESA'));
+      const importedBills: Bill[] = [];
+      
+      lines.forEach((line, index) => {
+        if (line.trim()) {
+          // Parse do formato: EMPRESA - NF NUMEROPARCELADATAVALOR
+          const match = line.match(/^(.+?)\s*-\s*NF\s*(\S+)\s*(\d+\/\d+)\s*(\d{2}\/\d{2}\/\d{4})R\$\s*([\d.,]+)$/);
+          
+          if (match) {
+            const [, company, number, parcels, date, valueStr] = match;
+            const value = parseFloat(valueStr.replace(/\./g, '').replace(',', '.'));
+            
+            if (!isNaN(value)) {
+              importedBills.push({
+                id: Math.max(...defaultBills.map(b => b.id)) + index + 1,
+                company: company.trim(),
+                number: NF ,
+                parcels: parcels,
+                date: date,
+                value: value
+              });
+            }
+          }
+        }
+      });
+
+      return importedBills;
+    } catch (error) {
+      console.error('Erro ao importar contas:', error);
+      return [];
+    }
+  };
+
+  // Carregar dados iniciais e importar contas automaticamente
   useEffect(() => {
-    const savedBills = localStorage.getItem('bills');
-    const adminStatus = localStorage.getItem('adminLoggedIn');
-    
-    if (savedBills) {
-      const parsedBills = JSON.parse(savedBills);
-      setBills(parsedBills);
-      setFilteredBills(parsedBills);
-    } else {
-      setBills(defaultBills);
-      setFilteredBills(defaultBills);
-      localStorage.setItem('bills', JSON.stringify(defaultBills));
-    }
-    
-    if (adminStatus === 'true') {
-      setIsAdminLoggedIn(true);
-    }
+    const initializeData = async () => {
+      const savedBills = localStorage.getItem('bills');
+      const adminStatus = localStorage.getItem('adminLoggedIn');
+      
+      let allBills = [...defaultBills];
+      
+      // Se não há dados salvos, importar do arquivo contas.txt
+      if (!savedBills) {
+        console.log('Importando contas do arquivo contas.txt...');
+        const importedBills = await importBillsFromFile();
+        if (importedBills.length > 0) {
+          allBills = [...defaultBills, ...importedBills];
+          console.log(`${importedBills.length} contas importadas do arquivo contas.txt`);
+        }
+      } else {
+        // Se há dados salvos, usar eles
+        allBills = JSON.parse(savedBills);
+      }
+      
+      setBills(allBills);
+      setFilteredBills(allBills);
+      localStorage.setItem('bills', JSON.stringify(allBills));
+      
+      if (adminStatus === 'true') {
+        setIsAdminLoggedIn(true);
+      }
+    };
+
+    initializeData();
   }, []);
 
   // Aplicar máscara de valor (XX.XXX,XX)
@@ -152,38 +204,11 @@ function App() {
     alert('Logout realizado com sucesso!');
   };
 
-  // Importar contas do arquivo contas.txt
-  const importBillsFromFile = async () => {
+  // Importar contas do arquivo contas.txt (função manual)
+  const handleImportBillsFromFile = async () => {
     try {
-      const response = await fetch('/contas.txt');
-      const text = await response.text();
+      const importedBills = await importBillsFromFile();
       
-      const lines = text.split('\n').filter(line => line.trim() && !line.includes('EMPRESA'));
-      const importedBills: Bill[] = [];
-      
-      lines.forEach((line, index) => {
-        if (line.trim()) {
-          // Parse do formato: EMPRESA - NF NUMEROPARCELADATAVALOR
-          const match = line.match(/^(.+?)\s*-\s*NF\s*(\S+)\s*(\d+\/\d+)\s*(\d{2}\/\d{2}\/\d{4})R\$\s*([\d.,]+)$/);
-          
-          if (match) {
-            const [, company, number, parcels, date, valueStr] = match;
-            const value = parseFloat(valueStr.replace(/\./g, '').replace(',', '.'));
-            
-            if (!isNaN(value)) {
-              importedBills.push({
-                id: Math.max(...bills.map(b => b.id)) + index + 1,
-                company: company.trim(),
-                number: NF ,
-                parcels: parcels,
-                date: date,
-                value: value
-              });
-            }
-          }
-        }
-      });
-
       if (importedBills.length > 0) {
         const updatedBills = [...bills, ...importedBills];
         setBills(updatedBills);
@@ -591,7 +616,7 @@ function App() {
               <div className="admin-section">
                 <h3>Importação de Contas</h3>
                 <p>Importar contas do arquivo contas.txt</p>
-                <button onClick={importBillsFromFile} className="btn-import">
+                <button onClick={handleImportBillsFromFile} className="btn-import">
                   <Upload />
                   Importar Contas
                 </button>
