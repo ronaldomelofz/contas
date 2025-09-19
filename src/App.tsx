@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Save, X, Calendar, DollarSign, FileText, Building2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Calendar, DollarSign, FileText, Building2, Filter, Download, Upload, Shield, LogOut } from 'lucide-react';
 import './App.css';
 
 interface Bill {
@@ -27,6 +27,10 @@ function App() {
   const [filteredBills, setFilteredBills] = useState<Bill[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [editingBill, setEditingBill] = useState<Bill | null>(null);
   const [formData, setFormData] = useState({
     company: '',
@@ -35,10 +39,20 @@ function App() {
     date: '',
     value: ''
   });
+  const [filterData, setFilterData] = useState({
+    startDate: '',
+    endDate: ''
+  });
+  const [loginData, setLoginData] = useState({
+    username: '',
+    password: ''
+  });
 
   // Carregar dados iniciais
   useEffect(() => {
     const savedBills = localStorage.getItem('bills');
+    const adminStatus = localStorage.getItem('adminLoggedIn');
+    
     if (savedBills) {
       const parsedBills = JSON.parse(savedBills);
       setBills(parsedBills);
@@ -47,6 +61,10 @@ function App() {
       setBills(defaultBills);
       setFilteredBills(defaultBills);
       localStorage.setItem('bills', JSON.stringify(defaultBills));
+    }
+    
+    if (adminStatus === 'true') {
+      setIsAdminLoggedIn(true);
     }
   }, []);
 
@@ -83,6 +101,102 @@ function App() {
       minimumFractionDigits: 2, 
       maximumFractionDigits: 2 
     });
+  };
+
+  // Aplicar filtro por data
+  const applyDateFilter = () => {
+    if (!filterData.startDate || !filterData.endDate) {
+      setFilteredBills(bills);
+      setShowFilterModal(false);
+      return;
+    }
+
+    const startDate = new Date(filterData.startDate);
+    const endDate = new Date(filterData.endDate);
+
+    const filtered = bills.filter(bill => {
+      const [day, month, year] = bill.date.split('/').map(Number);
+      const billDate = new Date(year, month - 1, day);
+      return billDate >= startDate && billDate <= endDate;
+    });
+
+    setFilteredBills(filtered);
+    setShowFilterModal(false);
+  };
+
+  // Limpar filtro
+  const clearFilter = () => {
+    setFilterData({ startDate: '', endDate: '' });
+    setFilteredBills(bills);
+    setShowFilterModal(false);
+  };
+
+  // Login de administrador
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginData.username === 'admin' && loginData.password === '1214') {
+      setIsAdminLoggedIn(true);
+      localStorage.setItem('adminLoggedIn', 'true');
+      setShowLoginModal(false);
+      setLoginData({ username: '', password: '' });
+      alert('Login de administrador realizado com sucesso!');
+    } else {
+      alert('Usuário ou senha incorretos!');
+    }
+  };
+
+  // Logout de administrador
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    localStorage.removeItem('adminLoggedIn');
+    alert('Logout realizado com sucesso!');
+  };
+
+  // Importar contas do arquivo contas.txt
+  const importBillsFromFile = async () => {
+    try {
+      const response = await fetch('/contas.txt');
+      const text = await response.text();
+      
+      const lines = text.split('\n').filter(line => line.trim() && !line.includes('EMPRESA'));
+      const importedBills: Bill[] = [];
+      
+      lines.forEach((line, index) => {
+        if (line.trim()) {
+          // Parse do formato: EMPRESA - NF NUMEROPARCELADATAVALOR
+          const match = line.match(/^(.+?)\s*-\s*NF\s*(\S+)\s*(\d+\/\d+)\s*(\d{2}\/\d{2}\/\d{4})R\$\s*([\d.,]+)$/);
+          
+          if (match) {
+            const [, company, number, parcels, date, valueStr] = match;
+            const value = parseFloat(valueStr.replace(/\./g, '').replace(',', '.'));
+            
+            if (!isNaN(value)) {
+              importedBills.push({
+                id: Math.max(...bills.map(b => b.id)) + index + 1,
+                company: company.trim(),
+                number: NF ,
+                parcels: parcels,
+                date: date,
+                value: value
+              });
+            }
+          }
+        }
+      });
+
+      if (importedBills.length > 0) {
+        const updatedBills = [...bills, ...importedBills];
+        setBills(updatedBills);
+        setFilteredBills(updatedBills);
+        localStorage.setItem('bills', JSON.stringify(updatedBills));
+        alert(`${importedBills.length} contas importadas com sucesso!`);
+      } else {
+        alert('Nenhuma conta válida encontrada no arquivo!');
+      }
+    } catch (error) {
+      console.error('Erro ao importar contas:', error);
+      alert('Erro ao importar contas. Verifique se o arquivo contas.txt existe.');
+    }
   };
 
   // Abrir modal de adicionar
@@ -198,6 +312,45 @@ function App() {
             <DollarSign className="header-icon" />
             Sistema de Contas
           </h1>
+          <div className="header-actions">
+            <button 
+              onClick={() => setShowFilterModal(true)} 
+              className="btn-filter"
+              title="Filtrar por data"
+            >
+              <Filter />
+              <span className="btn-text">Filtrar</span>
+            </button>
+            {isAdminLoggedIn ? (
+              <div className="admin-actions">
+                <button 
+                  onClick={() => setShowAdminModal(true)} 
+                  className="btn-admin"
+                  title="Painel Administrativo"
+                >
+                  <Shield />
+                  <span className="btn-text">Admin</span>
+                </button>
+                <button 
+                  onClick={handleAdminLogout} 
+                  className="btn-logout"
+                  title="Sair"
+                >
+                  <LogOut />
+                  <span className="btn-text">Sair</span>
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setShowLoginModal(true)} 
+                className="btn-login"
+                title="Login Administrador"
+              >
+                <Shield />
+                <span className="btn-text">Login</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -310,6 +463,149 @@ function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal de Filtro por Data */}
+      {showFilterModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>
+                <Filter />
+                Filtrar por Data
+              </h2>
+              <button onClick={() => setShowFilterModal(false)} className="close-btn">
+                <X />
+              </button>
+            </div>
+            <div className="modal-form">
+              <div className="form-group">
+                <label htmlFor="startDate">
+                  <Calendar />
+                  Data Inicial
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  value={filterData.startDate}
+                  onChange={(e) => setFilterData({ ...filterData, startDate: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="endDate">
+                  <Calendar />
+                  Data Final
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  value={filterData.endDate}
+                  onChange={(e) => setFilterData({ ...filterData, endDate: e.target.value })}
+                />
+              </div>
+              <div className="form-actions">
+                <button onClick={applyDateFilter} className="btn-save">
+                  <Filter />
+                  Aplicar Filtro
+                </button>
+                <button onClick={clearFilter} className="btn-cancel">
+                  <X />
+                  Limpar Filtro
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Login */}
+      {showLoginModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>
+                <Shield />
+                Login Administrador
+              </h2>
+              <button onClick={() => setShowLoginModal(false)} className="close-btn">
+                <X />
+              </button>
+            </div>
+            <form onSubmit={handleAdminLogin} className="modal-form">
+              <div className="form-group">
+                <label htmlFor="username">
+                  <Shield />
+                  Usuário
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  value={loginData.username}
+                  onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                  required
+                  placeholder="Digite o usuário"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">
+                  <Shield />
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={loginData.password}
+                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                  required
+                  placeholder="Digite a senha"
+                />
+              </div>
+              <div className="form-actions">
+                <button type="submit" className="btn-save">
+                  <Shield />
+                  Entrar
+                </button>
+                <button type="button" onClick={() => setShowLoginModal(false)} className="btn-cancel">
+                  <X />
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Administração */}
+      {showAdminModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>
+                <Shield />
+                Painel Administrativo
+              </h2>
+              <button onClick={() => setShowAdminModal(false)} className="close-btn">
+                <X />
+              </button>
+            </div>
+            <div className="modal-form">
+              <div className="admin-section">
+                <h3>Importação de Contas</h3>
+                <p>Importar contas do arquivo contas.txt</p>
+                <button onClick={importBillsFromFile} className="btn-import">
+                  <Upload />
+                  Importar Contas
+                </button>
+              </div>
+              <div className="form-actions">
+                <button onClick={() => setShowAdminModal(false)} className="btn-cancel">
+                  <X />
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de Adicionar */}
       {showAddModal && (

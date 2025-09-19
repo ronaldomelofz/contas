@@ -32,7 +32,11 @@ body {
 }
 
 .header-content {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .header h1 {
@@ -41,7 +45,6 @@ body {
   color: #2d3748;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 15px;
 }
 
@@ -49,6 +52,53 @@ body {
   color: #667eea;
   width: 40px;
   height: 40px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-filter, .btn-login, .btn-admin, .btn-logout {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-filter:hover, .btn-login:hover, .btn-admin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-logout {
+  background: linear-gradient(135deg, #f56565, #e53e3e);
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(245, 101, 101, 0.3);
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-filter svg, .btn-login svg, .btn-admin svg, .btn-logout svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Resumo */
@@ -432,10 +482,52 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-import {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.btn-import:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(237, 137, 54, 0.3);
+}
+
 .btn-save svg,
-.btn-cancel svg {
+.btn-cancel svg,
+.btn-import svg {
   width: 18px;
   height: 18px;
+}
+
+.admin-section {
+  background: #f7fafc;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.admin-section h3 {
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.admin-section p {
+  color: #718096;
+  margin-bottom: 15px;
 }
 
 /* Responsividade */
@@ -444,8 +536,17 @@ body {
     padding: 15px;
   }
   
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
   .header h1 {
     font-size: 2rem;
+  }
+  
+  .header-actions {
+    justify-content: center;
   }
   
   .summary {
